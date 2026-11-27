@@ -327,7 +327,7 @@ def figure_coefficients(df: pd.DataFrame, balance: pd.DataFrame) -> None:
     diversity = grouped["final_diversity"].median()
     alphas, phis = list(test.index), list(test.columns)
 
-    fig, (ax, ax1, ax2) = plt.subplots(1, 3, figsize=(7.4, 2.75),
+    fig, (ax, ax1, ax2) = plt.subplots(1, 3, figsize=(7.4, 2.95),
                                        gridspec_kw={"width_ratios": [1.5, 1, 1]})
 
     # (a) heatmap, one hue, darker = more accurate
@@ -335,7 +335,7 @@ def figure_coefficients(df: pd.DataFrame, balance: pd.DataFrame) -> None:
     for i in range(len(alphas)):
         for j in range(len(phis)):
             value = test.iloc[i, j]
-            ax.text(j, i, f"{value:.1f}", ha="center", va="center", fontsize=7.6,
+            ax.text(j, i, f"{value:.1f}", ha="center", va="center", fontsize=8.0,
                     color="white" if value > 97.6 else INK)
     # Step line: cells to the right of it violate the stability condition.
     xs, ys = [], []
@@ -368,6 +368,7 @@ def figure_coefficients(df: pd.DataFrame, balance: pd.DataFrame) -> None:
     ax1.set_xlabel("Cognitive share  β / (β + γ)")
     ax1.set_ylabel("Test accuracy (%)")
     ax1.set_ylim(84, 100.4)
+    ax1.set_yticks([85, 90, 95, 100])
     ax1.set_title("(b) Cognitive vs. social", loc="left", pad=12)
     ax1.legend(loc="lower left", handlelength=1.4, borderaxespad=0.3)
 
@@ -438,7 +439,7 @@ def figure_convergence(curves: Dict[str, np.ndarray], landscape_curves: Dict[str
     axes[0].set_ylabel("Best training accuracy (%)")
     axes[0].set_title("(a) Convergence, 4-8-1 network", loc="left")
     axes[0].legend(loc="lower right", handlelength=1.4)
-    for ax, title in ((axes[1], "(b) Swarm diversity, ANN"), (axes[2], "(c) Diversity, scale-free f")):
+    for ax, title in ((axes[1], "(b) Swarm diversity, ANN"), (axes[2], "(c) Diversity, control function")):
         ax.set_yscale("log")
         ax.set_ylabel("Mean distance from centre")
         ax.set_title(title, loc="left")
