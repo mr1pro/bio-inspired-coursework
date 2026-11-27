@@ -1,7 +1,7 @@
 {
  "front": {
-  "campus": "Dubai Campus  ·  School of Mathematical and Computer Sciences",
-  "course": "F21BC Biologically Inspired Computation  ·  Coursework Report  ·  November 2026",
+  "campus": "Dubai Campus, School of Mathematical and Computer Sciences",
+  "course": "F21BC Biologically Inspired Computation, Coursework Report, November 2026",
   "title": "A Multilayer Perceptron Trained by Particle Swarm Optimisation",
   "authors": "Ahmed Abdallah (H00562295) and Mohamed Ali (H00562194)",
   "code": "Code: github.com/mr1pro/bio-inspired-coursework",
@@ -14,7 +14,7 @@
   },
   {
    "type": "p",
-   "text": "**1.1 Overview.** We implemented a feedforward ANN and PSO in Python with NumPy as the only numerical library; the stratified split, standardisation and metrics are also our own code. Following the class design guidelines, the network is assembled by a Builder, informant selection is a Strategy, and an Adapter (Gamma *et al.*, 1994) is the only place where the PSO and ANN packages meet (Table 1)."
+   "text": "**1.1 Overview.** We implemented a feedforward ANN and PSO in Python with NumPy as the only numerical library. As in the design guidelines given in class, a Builder assembles the network, informant selection is a Strategy, and an Adapter (Gamma *et al.*, 1994) is the only place where the PSO and ANN packages meet (Table 1)."
   },
   {
    "type": "table",
@@ -37,12 +37,12 @@
      "One class per activation with `forward(z)`: logistic, tanh, ReLU; also leaky ReLU, ELU, linear, softmax."
     ],
     [
-     "`src/mlp/layer.py`, `network.py`, `builder.py`",
+     "`src/mlp/layer.py`, `network.py`, `builder.py`, `losses.py`",
      "`Layer`: weights, biases, activation. `Network`: a list of layers with `forward(X)`, and `get_parameters()` / `set_parameters(v)` to read or write all weights and biases as one vector. `MLPBuilder` builds a network from lists of layer sizes and activations, so depth, width and each layer's activation are configurable."
     ],
     [
-     "`src/pso/particle.py`, `population.py`",
-     "`Particle`: position, velocity, personal best, informants; `update_velocity()`, `update_position()`. `Population`: creates the swarm; main loop in `optimise()`."
+     "`src/pso/particle.py`, `population.py`, `fitness_function.py`",
+     "`Particle`: position, velocity, personal best, informants; `update_velocity()`, `update_position()`. `Population`: creates the swarm; main loop in `optimise()`. `FitnessFunction`: the interface PSO optimises."
     ],
     [
      "`src/pso/informant_strategy.py`, `boundary.py`",
@@ -53,28 +53,27 @@
      "`MLPFitnessAdapter.evaluate(position)` scores a particle as a network; `ActivationSearchAdapter` also decodes activation genes."
     ],
     [
-     "`main.py`, `run_experiments.py`, `analyse_results.py`, `tests/`",
-     "Train and test one network; run the experiments; tables, tests and figures; 70 unit tests."
+     "`src/data/`, `src/evaluation/`, `main.py`, `run_experiments.py`, `analyse_results.py`, `experiments/`, `tests/`",
+     "Stratified split, standardisation and metrics (our own NumPy code); train and test one network; run the experiments; tables, tests and figures; 71 unit tests."
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
    "type": "p",
-   "text": "**1.2 PSO.** `Population.optimise()` follows Algorithm 39 of Luke (2013), and comments such as `[A39 L24]` give the line of the algorithm each statement implements. Every iteration assesses each particle (lines 12–13), updates the best position found (14–15), computes all new velocities from each particle's own best x{ast}, its informants' best x^{+} and the global best x^{!}, with separate random numbers per dimension (16–24), and only then moves the particles (25–26). In the book's symbols, α is the proportion of velocity retained, β, γ and δ weight the pulls towards x{ast}, x^{+} and x^{!}, and ε is the jump size. Where the algorithm leaves a choice we followed Luke's text: fitness is maximised; each particle has k informants, re-drawn at random every iteration, and counts among its own informants; initial velocities are half the vector between two random points."
+   "text": "**1.2 PSO.** `Population.optimise()` follows Algorithm 39 of Luke (2013), and comments such as `[A39 L24]` give the line of the algorithm each statement implements. Every iteration assesses each particle (lines 12–13), updates the best position found (14–15), computes all new velocities from each particle's own best x{ast}, its informants' best x^{+} and the global best x^{!}, with separate random numbers per dimension (16–24), and only then moves the particles (25–26). Here α is the proportion of velocity retained, β, γ and δ weight the pulls towards x{ast}, x^{+} and x^{!}, and ε is the jump size. Where the algorithm leaves a choice we followed Luke's text: fitness is maximised; each particle has k informants, re-drawn at random every iteration, and counts among its own informants; initial velocities are half the vector between two random points."
   },
   {
    "type": "p",
-   "text": "**1.3 Coupling PSO to the ANN.** A particle's position is a vector of D real numbers, one per weight and bias: D = Σ_{l} (n_{l−1} n_{l} + n_{l}) for layer sizes n_{l}, so a 4-8-1 network has D = 49. PSO only sees an object with one method, `evaluate(position)`, which `MLPFitnessAdapter` implements in three steps. `Network.set_parameters()` cuts the vector into each layer's weight matrix and bias vector in a fixed order (layer by layer, weights then biases). The network classifies the training set, thresholding its single logistic output at 0.5. The fraction classified correctly is returned as the particle's fitness. The architecture is fixed before the run, so the vector length never changes. After PSO stops, the best position is written into the network and the test set is used for the first and only time."
+   "text": "**1.3 Coupling PSO to the ANN.** A particle's position is a vector of D real numbers, one per weight and bias: D = Σ_{l} (n_{l−1} n_{l} + n_{l}) for layer sizes n_{l}, so a 4-8-1 network has D = 49. PSO only sees an object with one method, `evaluate(position)`, which `MLPFitnessAdapter` implements in three steps. `Network.set_parameters()` cuts the vector into each layer's weight matrix and bias vector in a fixed order (layer by layer, weights then biases). The network classifies the training set, thresholding its single logistic output at 0.5. The fraction classified correctly is returned as the particle's fitness. The architecture, and so the vector length, is fixed for a run. After PSO stops, the best position is written into the network and the test set is used for the first and only time."
   },
   {
    "type": "p",
-   "text": "**1.4 Beyond the specification.** We added (i) four boundary handling techniques, applied after line 26, and a velocity limit; (ii) nearest-neighbour and ring informants; (iii) a linearly decreasing inertia weight (Shi and Eberhart, 1998); (iv) cross-entropy and mean squared error (MSE) as alternative fitness measures; and (v) PSO-chosen activation functions. For (v) the particle gets one extra coordinate per hidden layer, whose range is cut into equal bins, one per candidate activation; the adapter sets the layer's activation from the bin before installing the weights. The swarm also records its *diversity*, the mean distance of the particles from their centroid, our most useful diagnostic."
+   "text": "**1.4 Beyond the specification.** We added (i) four boundary handling techniques and a velocity limit; (ii) nearest-neighbour and ring informants; (iii) a linearly decreasing inertia weight (Shi and Eberhart, 1998); (iv) cross-entropy and mean squared error (MSE) as alternative fitness measures; and (v) PSO-chosen activation functions. For (v) the particle gets one extra coordinate per hidden layer, whose range is cut into equal bins, one per candidate activation (values outside it count as the nearest end bin); the adapter sets the layer's activation from the bin before installing the weights. The swarm also records its *diversity*, the mean distance of the particles from their centroid, our most useful diagnostic."
   },
   {
    "type": "p",
-   "text": "**1.5 Development and use of generative AI.** Our first version implemented the class design on the Iris data and minimised a loss. To bring it in line with this specification we used a generative AI assistant (Claude, by Anthropic, through Claude Code). It reordered the PSO loop to match Algorithm 39 and added the line-number comments, added ReLU, replaced Iris with the banknote data and scikit-learn's split and metrics with NumPy code, wrote the extensions of Section 1.4, the experiment scripts and the tests, ran the experiments and drafted this report. Every number below is generated by `run_experiments.py` and `analyse_results.py` with fixed seeds. Appendix A gives details and the prompt."
+   "text": "**1.5 Development and use of generative AI.** Our first version implemented the class design on the Iris data and minimised a loss; it already had nearest-neighbour informants and the global-best term. To bring it in line with this specification we used a generative AI assistant (Claude, by Anthropic, through Claude Code). It reordered the PSO loop to match Algorithm 39 and added the line-number comments; added ReLU and three further activations; made accuracy the fitness; replaced Iris with the banknote data, and scikit-learn's split and metrics with NumPy code; added boundary handling, the velocity limit, ring informants, the inertia schedule and the activation search; wrote the experiment scripts and the tests; ran the experiments; and drafted this report. Appendix A gives details and the prompt."
   },
   {
    "type": "h1",
@@ -82,7 +81,7 @@
   },
   {
    "type": "p",
-   "text": "**2.1 Questions and method.** We address the three required questions (Q1 architecture, Q2 allocation of evaluations, Q3 velocity coefficients) and four more: informants, boundary handling, the fitness measure and PSO-chosen activations. The data (Lohweg, 2012) has 1372 samples; a fixed stratified 70/30 split gives 960 training and 412 test samples, with inputs standardised using the training set's statistics."
+   "text": "**2.1 Questions and method.** We address the three required questions and four more: informants, boundary handling, the fitness measure and PSO-chosen activations. The data (Lohweg, 2012) has 1372 samples; a fixed stratified 70/30 split gives 960 training and 412 test samples, with inputs standardised using the training set's statistics."
   },
   {
    "type": "p",
@@ -90,19 +89,19 @@
   },
   {
    "type": "p",
-   "text": "Every setting is run 30 times. We report the mean and standard deviation of accuracy and compare settings with two-sided Mann–Whitney U tests, Holm-corrected for multiple comparisons (Derrac *et al.*, 2011). To keep the test set out of model selection (Lones, 2021), 'best' always means the highest mean *training* accuracy. The study comprises 9,540 runs."
+   "text": "Every setting is run 30 times. We report means and standard deviations of accuracy and compare settings with two-sided Mann–Whitney U tests (Derrac *et al.*, 2011); p-values in the text are single pairwise tests, and those in Appendix B are Holm-corrected. To keep the test set out of model selection (Lones, 2021), 'best' always means the highest mean *training* accuracy. The study comprises 8,460 distinct runs."
   },
   {
    "type": "p",
-   "text": "The baseline coefficients suit this problem poorly (Section 2.4), so we took the best cell of the coefficient grid, α = 0.4 with β = γ = 1, as a second set and ran every experiment under both, called *standard* and *tuned* below. Several conclusions reverse between them."
+   "text": "With 25 particles the baseline coefficients suit this problem poorly (Section 2.4), so we took the best cell of the coefficient grid, α = 0.4 with β = γ = 1, as a second set and ran every experiment under both, called *standard* and *tuned* below. Several conclusions reverse between them."
   },
   {
    "type": "p",
-   "text": "**2.2 Q1: Architecture.** With standard coefficients (Table 2) the best network has no hidden layer, and accuracy falls as parameters are added, to 95.57% with three hidden layers. With tuned coefficients the trend reverses: accuracy rises from 98.43% with no hidden layer to 99.51% with 8 hidden neurons (p < 0.001) and then levels off. Extra hidden layers do not help."
+   "text": "**2.2 Q1: Architecture.** With standard coefficients (Table 2) the network with no hidden layer is nominally the best, and accuracy falls as parameters are added, to 95.57% with three hidden layers. With tuned coefficients the trend reverses: accuracy rises from 98.43% with no hidden layer to 99.38% with 4 hidden neurons and 99.51% with 8 (p < 0.001), and more width costs nothing. Depth does cost: with the same D = 193, 4-32-1 beats 4-8-8-8-1 under both sets (p < 0.001)."
   },
   {
    "type": "table",
-   "caption": "**Table 2.** Test accuracy (%, mean ± s.d. of 30 runs) by architecture (tanh hidden units) and by hidden activation.",
+   "caption": "**Table 2.** Test accuracy (%, mean and s.d. of 30 runs) by architecture (tanh hidden units) and by hidden activation.",
    "columns": [
     {
      "header": "Network",
@@ -144,108 +143,107 @@
     [
      "4-1",
      "5",
-     "98.52 ± 0.46",
-     "98.43 ± 0.59",
+     "98.52 (0.46)",
+     "98.43 (0.59)",
      "4-8-1, logistic",
-     "97.24 ± 1.54",
-     "98.64 ± 0.68"
+     "97.24 (1.54)",
+     "98.64 (0.68)"
     ],
     [
      "4-2-1",
      "13",
-     "98.25 ± 0.93",
-     "98.82 ± 0.82",
+     "98.25 (0.93)",
+     "98.82 (0.82)",
      "4-8-1, tanh",
-     "97.79 ± 0.68",
-     "99.51 ± 0.63"
+     "97.79 (0.68)",
+     "99.51 (0.63)"
     ],
     [
      "4-4-1",
      "25",
-     "98.31 ± 0.57",
-     "99.38 ± 0.68",
+     "98.31 (0.57)",
+     "99.38 (0.68)",
      "4-8-1, ReLU",
-     "96.93 ± 1.50",
-     "99.60 ± 0.36"
+     "96.93 (1.50)",
+     "99.60 (0.36)"
     ],
     [
      "4-8-1",
      "49",
-     "97.79 ± 0.68",
-     "99.51 ± 0.63",
+     "97.79 (0.68)",
+     "99.51 (0.63)",
      "4-8-1, leaky ReLU",
-     "97.61 ± 1.43",
-     "99.31 ± 0.62"
+     "97.61 (1.43)",
+     "99.31 (0.62)"
     ],
     [
      "4-16-1",
      "97",
-     "97.63 ± 1.07",
-     "99.60 ± 0.43",
+     "97.63 (1.07)",
+     "99.60 (0.43)",
      "4-8-1, ELU",
-     "97.60 ± 1.21",
-     "99.33 ± 0.76"
+     "97.60 (1.21)",
+     "99.33 (0.76)"
     ],
     [
      "4-32-1",
      "193",
-     "97.14 ± 1.25",
-     "99.55 ± 0.41",
+     "97.14 (1.25)",
+     "99.55 (0.41)",
      "4-8-1, linear",
-     "98.05 ± 0.72",
-     "98.79 ± 0.46"
+     "98.05 (0.72)",
+     "98.79 (0.46)"
     ],
     [
      "4-4-4-1",
      "45",
-     "97.69 ± 1.23",
-     "98.83 ± 0.86",
+     "97.69 (1.23)",
+     "98.83 (0.86)",
      "4-8-8-1, logistic",
-     "94.89 ± 2.57",
-     "94.62 ± 3.37"
+     "94.89 (2.57)",
+     "94.62 (3.37)"
     ],
     [
      "4-8-8-1",
      "121",
-     "96.59 ± 1.52",
-     "98.97 ± 0.98",
-     "4-8-8-1, tanh",
-     "96.59 ± 1.52",
-     "98.97 ± 0.98"
+     "96.59 (1.52)",
+     "98.97 (0.98)",
+     "4-8-8-1, linear",
+     "97.90 (0.63)",
+     "98.58 (0.45)"
     ],
     [
      "4-16-16-1",
      "369",
-     "96.29 ± 1.61",
-     "99.17 ± 0.69",
-     "4-8-8-1, ReLU",
-     "95.38 ± 1.91",
-     "98.61 ± 1.43"
+     "96.29 (1.61)",
+     "99.17 (0.69)",
+     "",
+     "",
+     ""
     ],
     [
      "4-8-8-8-1",
      "193",
-     "95.57 ± 2.03",
-     "99.01 ± 0.73",
-     "4-8-8-1, ELU",
-     "96.81 ± 1.52",
-     "99.17 ± 0.89"
+     "95.57 (2.03)",
+     "99.01 (0.73)",
+     "",
+     "",
+     ""
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
    "type": "p",
-   "text": "Two effects compete. The classes are almost linearly separable (one logistic unit reaches about 98.5%), so extra capacity is worth about one point. Against that, each extra weight is one more dimension to search with the same 1000 evaluations. When the swarm is not converging only the second effect shows, and 'simpler is better' would be a conclusion about the optimiser, not the network."
+   "text": "The classes are almost linearly separable (one logistic unit reaches about 98.5%), so capacity is worth about one point and a small hidden layer collects it. Depth adds none that is needed, and we think it makes the search harder because each weight acts through more non-linearities. When the swarm is not converging extra width hurts too, and 'simpler is better' would be a conclusion about the optimiser, not the network."
   },
   {
    "type": "p",
-   "text": "Among activations (tuned), ReLU and tanh are indistinguishable (p = 0.85), and logistic is worse (p < 0.001), falling to 94.62% with two hidden layers. Its outputs are all positive and its slope never exceeds 0.25, so a second logistic layer receives almost constant inputs; we suspect most of the initial swarm sits on a plateau. Under standard coefficients a linear hidden layer is nominally the best choice: the non-linearity is not being used."
+   "text": "Among activations (tuned), ReLU and tanh are indistinguishable (p = 0.85), and logistic is worse (p < 0.001), falling to 94.62% with two hidden layers. We suspect a plateau: logistic outputs are all positive with slope at most 0.25, so a second layer sees almost constant inputs. Under standard coefficients linear hidden layers are best (p < 0.001 with two layers): the non-linearity is unused."
   },
   {
    "type": "p",
-   "text": "**2.3 Q2: Allocating evaluations.** For budgets of 500, 1000 and 2000 evaluations we varied the swarm from 5 to 250 particles, with iterations = budget / swarm size (Fig. 1). With standard coefficients the fewest particles are best at every budget: at 500 evaluations, 5 × 100 reaches 98.68%, against 96.38% for 25 × 20 and 93.54% for 250 × 2. With tuned coefficients the best allocation is in between. Five particles collapse onto one point and stall at 91.20%, with identical results at all three budgets. The best size is 25 at 500 and 1000 evaluations, and 25 or 50 at 2000 (p = 0.15)."
+   "text": "**2.3 Q2: Allocating evaluations.** For budgets of 500, 1000 and 2000 evaluations we varied the swarm from 5 to 250 particles (Fig. 1). With standard coefficients the fewest particles are best at every budget: at 500 evaluations, 5 × 100 (particles × iterations) reaches 98.68%, against 93.54% for 250 × 2. With tuned coefficients five particles stall at 91.20%, with identical results at all three budgets. The best size is 25 at every budget; 10 particles tie with it at 500 evaluations (p = 0.92) and 50 at 2000 (p = 0.15), so the range of good sizes moves up as the budget grows."
   },
   {
    "type": "figure",
@@ -255,24 +253,24 @@
   },
   {
    "type": "p",
-   "text": "A swarm needs enough iterations to converge and enough particles not to converge too soon. With 3 informants plus itself, a particle in a swarm of 5 sees 4 of the 5 personal bests, so a small swarm contracts quickly; that cures the standard swarm's failure to converge but over-tightens the tuned one. The best size also grows with the budget; Piotrowski *et al.* (2020) found that it depends on the problem and is often not the customary 20–50."
+   "text": "With standard coefficients a swarm of 5 does not expand (final diversity 3.8–5.9, against 30 or more for 10 and 25 particles) and does well; with tuned coefficients half the runs have stopped improving by iteration 23. Overall, the best standard allocation at 500 evaluations (5 × 100) and the best tuned one (25 × 20, 98.33%) do not differ significantly (p = 0.10): a small swarm is another way of making the standard coefficients converge. Piotrowski *et al.* (2020) also found the best swarm size to be problem-dependent."
   },
   {
    "type": "p",
-   "text": "**2.4 Q3: Velocity coefficients.** A 7 × 8 grid over α and β + γ, with β = γ (Fig. 2a), shows that accuracy is highest along a diagonal band: less inertia can be traded for more attraction. The best cell, α = 0.4 with β = γ = 1, reaches 99.51 ± 0.63% test accuracy against 97.79 ± 0.68% for the standard values (p < 0.001); a tuned run beats a standard run with probability 0.96."
+   "text": "**2.4 Q3: Velocity coefficients.** A 7 × 8 grid over α and β + γ, with β = γ (Fig. 2a), shows that accuracy is highest along a diagonal band: less inertia can be traded for more attraction. The best cell, α = 0.4 with β = γ = 1, reaches 99.51 ± 0.63% test accuracy against 97.79 ± 0.68% for the standard values (p < 0.001)."
   },
   {
    "type": "p",
-   "text": "Diversity explains the band (Fig. 2c). All swarms start at a diversity of 3.9. Settings that end far below 1 converged before finding a good region; settings that end above 10 are still spreading. Accuracy peaks in between, where the swarm contracts slowly. The standard setting ends at 82: its swarm *expands* throughout the run (Fig. 3b), although it lies inside the region where theory says a particle's variance stays bounded (Poli, 2009)."
+   "text": "Swarm diversity explains the upper edge of the band (Fig. 2c). All swarms start at a diversity of 3.9, and no setting that ended above 10 reached 99.4% training accuracy. Contracting is necessary but not sufficient: the three worst cells, all with β + γ = 0.5, also ended below 1. The standard setting ends at 82: its swarm *expands* throughout the run (Fig. 3b), although it lies inside the region where theory says a particle's variance stays bounded (Poli, 2009)."
   },
   {
    "type": "p",
-   "text": "That theory assumes the attractors x{ast} and x^{+} stay put. Here they move. Thresholded accuracy barely changes when all the weights are scaled up, so good positions exist at any distance from the origin, and in 49 dimensions almost all of the space lies further out. A control experiment supports this (Fig. 3c): on a function that depends only on the direction of x the standard swarm's diversity grows from 3.9 to 40, whereas on a sphere function it ends at 6.5; the tuned swarm contracts on both. Particles leaving the initial region early is a known effect in high dimensions (Helwig and Wanka, 2008), and large weights saturate the hidden units of PSO-trained networks (Rakitianskaia and Engelbrecht, 2015); the best particle's root-mean-square (r.m.s.) weight is 4.4 for standard and 0.46 for tuned."
+   "text": "That theory assumes fixed attractors. Here they move, we think for two reasons. Random informants re-drawn every iteration keep changing a particle's target (with nearest-neighbour informants the same swarm ends at 6.8). And thresholded accuracy should change little when all weights are scaled up, so nothing pulls particles back. A control experiment is consistent with this (Fig. 3c): on a function that depends only on the direction of x the standard swarm's diversity grows from 3.9 to 40, against 6.5 on a sphere, while the tuned swarm contracts on both. Particles leaving the initial region is a known effect in high dimensions (Helwig and Wanka, 2008), and large weights saturate the hidden units of PSO-trained networks (Rakitianskaia and Engelbrecht, 2015): the best particle's root-mean-square (r.m.s.) weight is 4.4 for standard and 0.46 for tuned."
   },
   {
    "type": "figure",
    "file": "/home/user/bio-inspired-coursework/results/figures/fig_coefficients.png",
-   "caption": "**Fig. 2.** Velocity coefficients. (a) Mean test accuracy over α and β + γ; cells right of the black line violate the stability condition β + γ < 24(1 − α^{2}) / (7 − 5α) (Poli, 2009). (b) A fixed β + γ (3 for standard, 2 for tuned) split between cognitive and social pull. (c) Mean training accuracy of the 56 grid settings against median final diversity.",
+   "caption": "**Fig. 2.** Velocity coefficients. (a) Mean test accuracy over α and β + γ; cells right of the black line violate the stability condition β + γ < 24(1 − α^{2}) / (7 − 5α) (Poli, 2009). (b) A fixed β + γ (3 for standard, 2 for tuned) split between cognitive and social pull (bars: 95% confidence intervals). (c) Mean training accuracy of the 56 grid settings against median final diversity.",
    "width_in": 7.1
   },
   {
@@ -283,15 +281,15 @@
   },
   {
    "type": "p",
-   "text": "*Cognitive against social* (Fig. 2b). With β + γ fixed, the tuned swarm does best with an even or slightly social split. A purely social swarm (β = 0) loses 1.4 points, and a purely cognitive one (γ = 0) is the worst setting in the study (85.91 ± 5.90%): with no informant term nothing is shared, giving Luke's (2013) 'separate hill-climbers'. The standard swarm is almost insensitive to the split, because its problem is the total pull, not the balance."
+   "text": "*Cognitive against social* (Fig. 2b). With β + γ fixed, the tuned swarm does best with an even or slightly social split. A purely social swarm (β = 0) loses 1.4 points, and a purely cognitive one (γ = 0) is the worst setting in the study (85.91 ± 5.90%): nothing is shared, and with little inertia each particle stalls near its own best, Luke's (2013) 'separate hill-climbers'. With standard coefficients the mixed splits differ little (97.58–98.21%), but final diversity falls from 280,000 to 6.6 as the cognitive share rises: the social term drives the expansion."
   },
   {
    "type": "p",
-   "text": "*Global best and jump size.* Moving half of the social pull onto the global best lifts the standard swarm to 99.56%, because a shared attractor makes it contract, but lowers the tuned swarm to 98.41%. Halving ε does the same. A linearly decreasing α (0.9 → 0.4) was no better than a constant 0.4 (p = 0.097)."
+   "text": "*Global best and jump size.* Moving half of the social pull onto the global best lifts the standard swarm to 99.56% but lowers the tuned swarm to 98.41%, and halving ε does the same. A linearly decreasing α (0.9 → 0.4) was no better than a constant 0.4 (p = 0.097)."
   },
   {
    "type": "p",
-   "text": "**2.5 Further experiments.** *Informants* (Fig. 4). With standard coefficients accuracy rises with the number of informants, and nearest-neighbour informants beat random ones (98.79% against 97.79% at k = 3, p < 0.001), because particles that listen to nearby particles pull together. With tuned coefficients the ranking flips. Random informants with k = 3 to 8 are best; nearest neighbours are worst (96.71% at k = 3), since neighbours hold nearly the same information and the swarm splits into groups that converge separately. Topology is known to change PSO's behaviour (Kennedy and Mendes, 2002); here the best topology depended on the coefficients."
+   "text": "**2.5 Further experiments.** *Informants* (Fig. 4). With standard coefficients accuracy rises with the number of informants, and nearest-neighbour or ring informants beat random ones (98.79% for nearest against 97.79% at k = 3, p < 0.001), because particles that listen to nearby particles pull together. With tuned coefficients random informants with k = 3 to 8 are best and nearest neighbours are worst (96.71% at k = 3), since neighbours hold nearly the same information and the swarm splits into groups that converge separately. Topology is known to matter (Kennedy and Mendes, 2002); here the best one depended on the coefficients."
   },
   {
    "type": "figure",
@@ -301,7 +299,7 @@
   },
   {
    "type": "table",
-   "caption": "**Table 3.** Further experiments on the baseline network: test accuracy (%, mean ± s.d. of 30 runs).",
+   "caption": "**Table 3.** Further experiments on the baseline network: test accuracy (%, mean and s.d. of 30 runs).",
    "columns": [
     {
      "header": "Change to the baseline",
@@ -321,97 +319,91 @@
    ],
    "rows": [
     [
-     "Baseline",
-     "97.79 ± 0.68",
-     "99.51 ± 0.63"
+     "None",
+     "97.79 (0.68)",
+     "99.51 (0.63)"
     ],
     [
      "Walls at ±1, clamp",
-     "98.23 ± 0.77",
-     "99.30 ± 0.61"
+     "98.23 (0.77)",
+     "99.30 (0.61)"
     ],
     [
      "Walls at ±1, reflect",
-     "96.63 ± 1.79",
-     "99.30 ± 0.55"
+     "96.63 (1.79)",
+     "99.30 (0.55)"
     ],
     [
      "Walls at ±1, wrap",
-     "94.61 ± 2.84",
-     "99.22 ± 0.72"
+     "94.61 (2.84)",
+     "99.22 (0.72)"
     ],
     [
      "Walls at ±1, random",
-     "97.14 ± 1.29",
-     "99.29 ± 0.47"
+     "97.14 (1.29)",
+     "99.29 (0.47)"
     ],
     [
      "Velocity limit ±0.5",
-     "99.13 ± 0.61",
-     "99.34 ± 0.48"
+     "99.13 (0.61)",
+     "99.34 (0.48)"
     ],
     [
-     "Fitness = cross-entropy",
-     "97.20 ± 1.15",
-     "97.13 ± 0.81"
+     "Cross-entropy fitness",
+     "97.20 (1.15)",
+     "97.13 (0.81)"
     ],
     [
-     "Fitness = MSE",
-     "97.65 ± 1.06",
-     "97.76 ± 0.84"
+     "MSE fitness",
+     "97.65 (1.06)",
+     "97.76 (0.84)"
     ],
     [
      "PSO-chosen activation",
-     "97.81 ± 0.87",
-     "99.22 ± 0.61"
+     "97.81 (0.87)",
+     "99.22 (0.61)"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
    "type": "p",
-   "text": "*Boundary handling* (Table 3). Walls matter only if particles reach them. The tuned swarm never touches walls at ±5 or ±10, and at ±1 the handlers do not differ significantly (Kruskal–Wallis p = 0.22). For the standard swarm, clamping is best and wrapping much the worst (p < 0.001): wrapping carries a weight that passes +1 round to −1, flipping its sign, whereas clamping leaves it at the nearest legal value. Helwig *et al.* (2013) also report large differences between bound handling methods. A velocity limit helped the standard swarm more than any wall."
+   "text": "*Boundary handling* (Table 3). Walls matter only if particles reach them. The tuned swarm never touches walls at ±5 or ±10, and at ±1 the four handlers do not differ (Kruskal–Wallis p = 0.99). For the standard swarm, clamping is best and wrapping much the worst (p < 0.001): wrapping carries a weight that passes +1 round to −1, flipping its sign, whereas clamping leaves it at the nearest legal value. Helwig *et al.* (2013) also report large differences between bound handling methods."
   },
   {
    "type": "p",
-   "text": "*Fitness measure.* Replacing accuracy with cross-entropy or MSE costs the tuned swarm about two points (p < 0.001). Tentatively, a loss can always be lowered by making already-correct outputs more confident, so the swarm follows that direction (r.m.s. weight 0.91 against 0.46) and converges before the last errors are fixed."
+   "text": "*Fitness measure.* Replacing accuracy with cross-entropy or MSE costs the tuned swarm about two points (p < 0.001). Tentatively, a loss can always be lowered by making already-correct outputs more confident (r.m.s. weight 0.91 against 0.46), so the swarm converges before the last errors are fixed."
   },
   {
    "type": "p",
-   "text": "*PSO-chosen activations.* Letting PSO choose the hidden activation costs a little at 1000 evaluations (p = 0.047) and nothing at 3000. Over 30 runs it chose tanh 13 times, ELU 8, leaky ReLU 5, ReLU 4 and logistic never, so it avoids the one clearly bad option. It can do little more, because crossing a bin edge swaps the function abruptly and the weights found so far no longer fit."
+   "text": "*PSO-chosen activations.* Letting PSO choose the hidden activation costs a little at 1000 evaluations (p = 0.047) and nothing at 3000. Over 30 tuned runs it chose tanh 13 times, ELU 8, leaky ReLU 5, ReLU 4 and logistic never, so it avoids the one clearly bad option. (With standard coefficients the genes drift out of range and the end bins dominate: ELU 16 times, logistic 4.)"
   },
   {
    "type": "p",
-   "text": "**2.6 Final configuration and limitations.** No experiment found a setting significantly better than the baseline network and swarm with tuned coefficients, so that is our final configuration (Table 4). In 1000 evaluations it averages 99.51% test accuracy, and 14 of 30 runs classify all 412 test notes correctly. Five times as many evaluations bring no significant gain (p = 0.47). Repeated stratified 10-fold cross-validation gave 99.66 ± 0.53%, so the result does not depend on our one split. Kumar and Dudyala (2015) found multilayer perceptrons among the most effective classifiers for this dataset; a 49-parameter network trained without gradients classifies it almost perfectly."
+   "text": "**2.6 Final configuration and limitations.** No experiment found a setting significantly better than the baseline network and swarm with tuned coefficients, so that is our final configuration (Table 4). In 1000 evaluations it averages 99.51% test accuracy, and 14 of 30 runs classify all 412 test notes correctly. Five times as many evaluations bring no significant gain (99.64%, p = 0.47). Repeated stratified 10-fold cross-validation gave 99.66 ± 0.53%. Kumar and Dudyala (2015) found multilayer perceptrons among the most effective classifiers for this dataset; a 49-parameter network trained without gradients classifies it almost perfectly."
   },
   {
    "type": "table",
-   "caption": "**Table 4.** Baseline and final configurations: 30 runs on the fixed split (%), and accuracy over 30 folds of repeated 10-fold cross-validation (CV).",
+   "caption": "**Table 4.** Baseline and final configurations at 1000 evaluations: mean and s.d. (%) of 30 runs on the fixed split, and accuracy over 30 folds of repeated 10-fold cross-validation (CV).",
    "columns": [
     {
      "header": "Coefficients",
-     "width_in": 1.5,
+     "width_in": 1.75,
      "align": "left"
     },
     {
-     "header": "Evals",
-     "width_in": 0.55,
-     "align": "right"
-    },
-    {
      "header": "Train acc.",
-     "width_in": 1.1,
+     "width_in": 1.15,
      "align": "right"
     },
     {
      "header": "Test acc.",
-     "width_in": 1.1,
+     "width_in": 1.15,
      "align": "right"
     },
     {
-     "header": "Prec.",
-     "width_in": 0.6,
+     "header": "Precision",
+     "width_in": 0.75,
      "align": "right"
     },
     {
@@ -421,7 +413,7 @@
     },
     {
      "header": "F1",
-     "width_in": 0.6,
+     "width_in": 0.65,
      "align": "right"
     },
     {
@@ -433,51 +425,28 @@
    "rows": [
     [
      "Standard (baseline)",
-     "1000",
-     "98.62 ± 0.59",
-     "97.79 ± 0.68",
+     "98.63 (0.59)",
+     "97.79 (0.68)",
      "96.69",
      "98.45",
      "97.54",
-     "98.08 ± 1.16"
-    ],
-    [
-     "Standard (baseline)",
-     "5000",
-     "99.50 ± 0.22",
-     "98.77 ± 0.46",
-     "98.59",
-     "98.65",
-     "98.62",
-     "99.13 ± 0.91"
+     "98.08 (1.16)"
     ],
     [
      "Tuned (final)",
-     "1000",
-     "99.82 ± 0.30",
-     "99.51 ± 0.63",
+     "99.82 (0.30)",
+     "99.51 (0.63)",
      "99.32",
      "99.58",
      "99.45",
-     "99.66 ± 0.53"
-    ],
-    [
-     "Tuned (final)",
-     "5000",
-     "99.88 ± 0.28",
-     "99.64 ± 0.54",
-     "99.57",
-     "99.62",
-     "99.59",
-     "99.76 ± 0.48"
+     "99.66 (0.53)"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
    "type": "p",
-   "text": "Limitations: the one dataset is nearly linearly separable, and differences among the good settings (99.3–99.6%) are within noise. Hyperparameters were varied one or two at a time around two points, so interactions may have been missed. Settings were chosen by training accuracy, not on a validation set."
+   "text": "Limitations: the one dataset is nearly linearly separable, and differences among the good settings (99.3–99.6%) are within noise. Hyperparameters were varied one or two at a time around two points, so interactions may have been missed. The tuned coefficients were chosen with 25 particles, 3 random informants and the 4-8-1 network, on the same 30 seeds, which favours those values. Settings were chosen by training accuracy, not on a validation set."
   },
   {
    "type": "h1",
@@ -485,19 +454,15 @@
   },
   {
    "type": "p",
-   "text": "We built a configurable feedforward ANN and the informant-based PSO of Algorithm 39 from scratch, coupled them through a fitness adapter and trained the network to authenticate banknotes. Four conclusions follow."
+   "text": "We built a configurable ANN and the informant-based PSO of Algorithm 39 from scratch, coupled them through a fitness adapter and trained the network to authenticate banknotes. Three conclusions follow."
   },
   {
    "type": "p",
-   "text": "*The velocity coefficients matter most.* The usual values made the swarm expand on this problem; α = 0.4 with β = γ = 1 raised mean test accuracy from 97.8% to 99.5% at the same cost."
+   "text": "*The velocity coefficients matter most.* With 25 particles the usual values made the swarm expand on this problem; α = 0.4 with β = γ = 1 raised mean test accuracy from 97.8% to 99.5%. Swarms that kept spreading never reached the best accuracies, though contracting was not sufficient."
   },
   {
    "type": "p",
-   "text": "*Swarm diversity predicts accuracy.* The best settings let the swarm contract slowly; swarms that collapsed or kept spreading did worse."
-  },
-  {
-   "type": "p",
-   "text": "*The other answers depended on the coefficients.* With a swarm that did not converge, the smallest network, the smallest swarm, the most informants and nearest-neighbour informants all looked best. With tuned coefficients each of these reversed, in favour of one hidden layer of at least 8 neurons, about 25 particles and 3 random informants."
+   "text": "*The other answers depended on the coefficients.* With a swarm that did not converge, the smallest network, the smallest swarm, and many or local informants looked best. With tuned coefficients each of these reversed, in favour of one small hidden layer, about 25 particles and a few random informants."
   },
   {
    "type": "p",
@@ -505,7 +470,7 @@
   },
   {
    "type": "p",
-   "text": "With more time we would adapt the inertia weight to the measured diversity during a run; repeat the study on a harder, non-separable problem, where capacity and overfitting (van Wyk and Engelbrecht, 2010) should matter more; and compare against backpropagation at an equal number of evaluations."
+   "text": "With more time we would adapt the inertia weight to the measured diversity, repeat the study on a harder, non-separable problem where capacity and overfitting (van Wyk and Engelbrecht, 2010) should matter more, and compare against backpropagation at equal cost."
   }
  ],
  "references": [
@@ -515,16 +480,16 @@
   "Gamma, E., Helm, R., Johnson, R. and Vlissides, J. (1994) *Design Patterns: Elements of Reusable Object-Oriented Software*. Reading, MA: Addison-Wesley.",
   "Helwig, S., Branke, J. and Mostaghim, S. (2013) 'Experimental analysis of bound handling techniques in particle swarm optimization', *IEEE Transactions on Evolutionary Computation*, 17(2), pp. 259–271.",
   "Helwig, S. and Wanka, R. (2008) 'Theoretical analysis of initial particle swarm behavior', in *Parallel Problem Solving from Nature – PPSN X*. Lecture Notes in Computer Science, vol. 5199. Berlin: Springer, pp. 889–898.",
-  "Kennedy, J. and Mendes, R. (2002) 'Population structure and particle swarm performance', in *Proceedings of the 2002 Congress on Evolutionary Computation (CEC'02)*. Honolulu: IEEE, pp. 1671–1676.",
+  "Kennedy, J. and Mendes, R. (2002) 'Population structure and particle swarm performance', in *Proceedings of the 2002 Congress on Evolutionary Computation (CEC'02)*. IEEE, pp. 1671–1676.",
   "Kumar, C. and Dudyala, A.K. (2015) 'Bank note authentication using decision tree rules and machine learning techniques', in *2015 International Conference on Advances in Computer Engineering and Applications*. IEEE. doi: 10.1109/ICACEA.2015.7164721.",
   "Lohweg, V. (2012) *Banknote Authentication* [Dataset]. UCI Machine Learning Repository. doi: 10.24432/C55P57.",
   "Lones, M.A. (2021) 'How to avoid machine learning pitfalls: a guide for academic researchers', *arXiv preprint* arXiv:2108.02497.",
   "Luke, S. (2013) *Essentials of Metaheuristics*. 2nd edn. Lulu. Available at: http://people.cs.gmu.edu/~sean/book/metaheuristics/ (Accessed: 27 November 2026).",
   "Piotrowski, A.P., Napiorkowski, J.J. and Piotrowska, A.E. (2020) 'Population size in particle swarm optimization', *Swarm and Evolutionary Computation*, 58, 100718.",
   "Poli, R. (2009) 'Mean and variance of the sampling distribution of particle swarm optimizers during stagnation', *IEEE Transactions on Evolutionary Computation*, 13(4), pp. 712–721.",
-  "Rakitianskaia, A. and Engelbrecht, A. (2015) 'Saturation in PSO neural network training: good or evil?', in *2015 IEEE Congress on Evolutionary Computation (CEC)*. IEEE, pp. 125–132.",
-  "Shi, Y. and Eberhart, R. (1998) 'A modified particle swarm optimizer', in *1998 IEEE International Conference on Evolutionary Computation Proceedings*. Anchorage: IEEE, pp. 69–73.",
-  "van Wyk, A.B. and Engelbrecht, A.P. (2010) 'Overfitting by PSO trained feedforward neural networks', in *IEEE Congress on Evolutionary Computation*. Barcelona: IEEE, pp. 1–8."
+  "Rakitianskaia, A. and Engelbrecht, A.P. (2015) 'Saturation in PSO neural network training: good or evil?', in *2015 IEEE Congress on Evolutionary Computation (CEC)*. IEEE, pp. 125–132.",
+  "Shi, Y. and Eberhart, R. (1998) 'A modified particle swarm optimizer', in *1998 IEEE International Conference on Evolutionary Computation Proceedings*. IEEE, pp. 69–73.",
+  "van Wyk, A.B. and Engelbrecht, A.P. (2010) 'Overfitting by PSO trained feedforward neural networks', in *IEEE Congress on Evolutionary Computation*. IEEE, pp. 1–8."
  ],
  "appendix": [
   {
@@ -545,11 +510,11 @@
   },
   {
    "type": "p",
-   "text": "**What it produced.** (1) Code: the changes listed in Section 1.5, that is, the Algorithm 39 loop and its line-number comments, the added activations, the NumPy data handling and metrics, the boundary handlers, the ring informant strategy, the velocity limit and inertia schedule, the activation-search adapter, the command-line interface, the experiment runner, the analysis script and the unit tests. (2) Experiments: the choice of experiments and value ranges, and all the runs. (3) Report: the text, tables and figures."
+   "text": "**What it produced.** (1) Code: the changes listed in Section 1.5, that is, the Algorithm 39 loop and its line-number comments, the added activations, accuracy as the fitness, the NumPy data handling and metrics, the boundary handlers, the ring informant strategy, the velocity limit and inertia schedule, the activation-search adapter, the command-line interface, the experiment runner, the analysis script and the unit tests. (2) Experiments: the choice of experiments and value ranges, and all the runs. (3) Report: the text, tables and figures."
   },
   {
    "type": "p",
-   "text": "**How it was checked.** The assistant compared the PSO loop with Algorithm 39 in the book's PDF, downloaded the data file from the UCI repository and checked its size and class counts, ran the 70 unit tests, and ran the complete set of experiments twice to confirm that the 9,540 runs gave identical results. The numbers in this report are inserted from the result files by a script, not typed. Each reference was checked against a publisher, repository or index record; page numbers that could not be confirmed were left out."
+   "text": "**How it was checked.** The assistant compared the PSO loop with Algorithm 39 in the book's PDF, downloaded the data file from the UCI repository and checked its size and class counts, ran the 71 unit tests, and ran the complete set of experiments twice to confirm that all 9,540 run records were identical. The numbers in this report are inserted from the result files by a script, not typed. Three further instances of the assistant then reviewed the report section by section against the code and the raw results; they found no errors in the tables but did find one mis-quoted test and several overstated explanations, which were corrected. Each reference was checked against a publisher, repository or index record; page numbers that could not be confirmed were left out."
   },
   {
    "type": "p",
@@ -561,7 +526,7 @@
   },
   {
    "type": "p",
-   "text": "The tables below give training as well as test accuracy (%, mean ± s.d. of 30 runs), the median final swarm diversity (Div.) and the Holm-corrected p-value of a two-sided Mann–Whitney U test on test accuracy against the best setting of the same block (the one with the highest mean training accuracy, marked 'best'). The complete results of all 16 experiments are in `results/summary.md` and `results/tables/` in the code submission."
+   "text": "The tables below give training as well as test accuracy (%, mean and s.d. of 30 runs), the median final swarm diversity (Div.) and the Holm-corrected p-value of a two-sided Mann–Whitney U test on test accuracy against the best setting of the same block (the one with the highest mean training accuracy, marked 'best'). Diversity grows with D, so it should only be compared between settings with the same D. The complete results of all 16 experiments are in `results/summary.md` and `results/tables/` in the code submission."
   },
   {
    "type": "table",
@@ -602,85 +567,84 @@
     [
      "4-1",
      "5",
-     "99.28 ± 0.17",
-     "98.52 ± 0.46",
+     "99.28 (0.17)",
+     "98.52 (0.46)",
      "4.4",
      "best"
     ],
     [
      "4-2-1",
      "13",
-     "99.02 ± 0.57",
-     "98.25 ± 0.93",
+     "99.02 (0.57)",
+     "98.25 (0.93)",
      "37",
      "0.457"
     ],
     [
      "4-4-1",
      "25",
-     "98.96 ± 0.38",
-     "98.31 ± 0.57",
+     "98.96 (0.38)",
+     "98.31 (0.57)",
      "72",
      "0.241"
     ],
     [
      "4-8-1",
      "49",
-     "98.62 ± 0.59",
-     "97.79 ± 0.68",
+     "98.63 (0.59)",
+     "97.79 (0.68)",
      "82",
      "<0.001"
     ],
     [
      "4-16-1",
      "97",
-     "98.39 ± 0.80",
-     "97.63 ± 1.07",
+     "98.39 (0.80)",
+     "97.63 (1.07)",
      "110",
      "<0.001"
     ],
     [
      "4-32-1",
      "193",
-     "98.28 ± 0.83",
-     "97.14 ± 1.25",
+     "98.28 (0.83)",
+     "97.14 (1.25)",
      "160",
      "<0.001"
     ],
     [
      "4-4-4-1",
      "45",
-     "98.43 ± 0.84",
-     "97.69 ± 1.23",
+     "98.43 (0.84)",
+     "97.69 (1.23)",
      "95",
      "0.013"
     ],
     [
      "4-8-8-1",
      "121",
-     "97.84 ± 1.21",
-     "96.59 ± 1.52",
+     "97.84 (1.21)",
+     "96.59 (1.52)",
      "110",
      "<0.001"
     ],
     [
      "4-16-16-1",
      "369",
-     "97.11 ± 1.54",
-     "96.29 ± 1.61",
+     "97.11 (1.54)",
+     "96.29 (1.61)",
      "160",
      "<0.001"
     ],
     [
      "4-8-8-8-1",
      "193",
-     "96.59 ± 1.79",
-     "95.57 ± 2.03",
+     "96.59 (1.79)",
+     "95.57 (2.03)",
      "130",
      "<0.001"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
@@ -722,85 +686,84 @@
     [
      "4-1",
      "5",
-     "99.35 ± 0.34",
-     "98.43 ± 0.59",
+     "99.35 (0.34)",
+     "98.43 (0.59)",
      "0.045",
      "<0.001"
     ],
     [
      "4-2-1",
      "13",
-     "99.55 ± 0.39",
-     "98.82 ± 0.82",
+     "99.55 (0.39)",
+     "98.82 (0.82)",
      "0.2",
      "<0.001"
     ],
     [
      "4-4-1",
      "25",
-     "99.70 ± 0.41",
-     "99.38 ± 0.68",
+     "99.70 (0.41)",
+     "99.38 (0.68)",
      "0.47",
      "0.835"
     ],
     [
      "4-8-1",
      "49",
-     "99.82 ± 0.30",
-     "99.51 ± 0.63",
+     "99.82 (0.30)",
+     "99.51 (0.63)",
      "0.65",
      "1.000"
     ],
     [
      "4-16-1",
      "97",
-     "99.91 ± 0.15",
-     "99.60 ± 0.43",
+     "99.91 (0.15)",
+     "99.60 (0.43)",
      "1",
      "best"
     ],
     [
      "4-32-1",
      "193",
-     "99.89 ± 0.19",
-     "99.55 ± 0.41",
+     "99.89 (0.19)",
+     "99.55 (0.41)",
      "1.7",
      "1.000"
     ],
     [
      "4-4-4-1",
      "45",
-     "99.44 ± 0.52",
-     "98.83 ± 0.86",
+     "99.44 (0.52)",
+     "98.83 (0.86)",
      "1",
      "<0.001"
     ],
     [
      "4-8-8-1",
      "121",
-     "99.45 ± 0.64",
-     "98.97 ± 0.98",
+     "99.45 (0.64)",
+     "98.97 (0.98)",
      "1.7",
      "0.039"
     ],
     [
      "4-16-16-1",
      "369",
-     "99.63 ± 0.41",
-     "99.17 ± 0.69",
+     "99.63 (0.41)",
+     "99.17 (0.69)",
      "2.6",
      "0.054"
     ],
     [
      "4-8-8-8-1",
      "193",
-     "99.57 ± 0.39",
-     "99.01 ± 0.73",
+     "99.57 (0.39)",
+     "99.01 (0.73)",
      "2.2",
      "0.002"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
@@ -808,7 +771,7 @@
    "caption": "**Table B3.** Allocation of evaluations, standard coefficients (p within each budget).",
    "columns": [
     {
-     "header": "Budget and allocation",
+     "header": "Evaluations: particles × iterations",
      "width_in": 3.05,
      "align": "left"
     },
@@ -840,151 +803,150 @@
    ],
    "rows": [
     [
-     "500 evaluations: 5 particles × 100 iterations",
+     "500: 5 × 100",
      "49",
-     "99.38 ± 0.64",
-     "98.68 ± 1.08",
+     "99.38 (0.64)",
+     "98.68 (1.08)",
      "5.9",
      "best"
     ],
     [
-     "500 evaluations: 10 particles × 50 iterations",
+     "500: 10 × 50",
      "49",
-     "98.40 ± 0.83",
-     "97.52 ± 1.06",
+     "98.40 (0.83)",
+     "97.52 (1.06)",
      "33",
      "<0.001"
     ],
     [
-     "500 evaluations: 25 particles × 20 iterations",
+     "500: 25 × 20",
      "49",
-     "97.57 ± 1.07",
-     "96.38 ± 1.53",
+     "97.57 (1.07)",
+     "96.38 (1.53)",
      "31",
      "<0.001"
     ],
     [
-     "500 evaluations: 50 particles × 10 iterations",
+     "500: 50 × 10",
      "49",
-     "96.65 ± 1.70",
-     "95.58 ± 1.93",
+     "96.65 (1.70)",
+     "95.58 (1.93)",
      "13",
      "<0.001"
     ],
     [
-     "500 evaluations: 100 particles × 5 iterations",
+     "500: 100 × 5",
      "49",
-     "95.26 ± 1.55",
-     "93.88 ± 1.98",
+     "95.26 (1.55)",
+     "93.88 (1.98)",
      "7.1",
      "<0.001"
     ],
     [
-     "500 evaluations: 250 particles × 2 iterations",
+     "500: 250 × 2",
      "49",
-     "94.54 ± 2.38",
-     "93.54 ± 2.59",
+     "94.54 (2.38)",
+     "93.54 (2.59)",
      "3.8",
      "<0.001"
     ],
     [
-     "1000 evaluations: 5 particles × 200 iterations",
+     "1000: 5 × 200",
      "49",
-     "99.63 ± 0.60",
-     "99.12 ± 0.90",
+     "99.63 (0.60)",
+     "99.12 (0.90)",
      "4.7",
      "best"
     ],
     [
-     "1000 evaluations: 10 particles × 100 iterations",
+     "1000: 10 × 100",
      "49",
-     "98.99 ± 0.75",
-     "98.28 ± 1.00",
+     "98.99 (0.75)",
+     "98.28 (1.00)",
      "110",
      "<0.001"
     ],
     [
-     "1000 evaluations: 25 particles × 40 iterations",
+     "1000: 25 × 40",
      "49",
-     "98.62 ± 0.59",
-     "97.79 ± 0.68",
+     "98.63 (0.59)",
+     "97.79 (0.68)",
      "82",
      "<0.001"
     ],
     [
-     "1000 evaluations: 50 particles × 20 iterations",
+     "1000: 50 × 20",
      "49",
-     "98.20 ± 0.70",
-     "97.35 ± 1.00",
+     "98.20 (0.70)",
+     "97.35 (1.00)",
      "34",
      "<0.001"
     ],
     [
-     "1000 evaluations: 100 particles × 10 iterations",
+     "1000: 100 × 10",
      "49",
-     "97.35 ± 1.01",
-     "96.32 ± 1.16",
+     "97.35 (1.01)",
+     "96.32 (1.16)",
      "15",
      "<0.001"
     ],
     [
-     "1000 evaluations: 250 particles × 4 iterations",
+     "1000: 250 × 4",
      "49",
-     "96.39 ± 1.10",
-     "95.59 ± 1.16",
+     "96.39 (1.10)",
+     "95.59 (1.16)",
      "6.3",
      "<0.001"
     ],
     [
-     "2000 evaluations: 5 particles × 400 iterations",
+     "2000: 5 × 400",
      "49",
-     "99.76 ± 0.34",
-     "99.38 ± 0.68",
+     "99.76 (0.34)",
+     "99.38 (0.68)",
      "3.8",
      "best"
     ],
     [
-     "2000 evaluations: 10 particles × 200 iterations",
+     "2000: 10 × 200",
      "49",
-     "99.36 ± 0.59",
-     "98.74 ± 0.92",
+     "99.36 (0.59)",
+     "98.74 (0.92)",
      "240",
      "0.002"
     ],
     [
-     "2000 evaluations: 25 particles × 80 iterations",
+     "2000: 25 × 80",
      "49",
-     "99.22 ± 0.35",
-     "98.41 ± 0.63",
+     "99.22 (0.35)",
+     "98.41 (0.63)",
      "470",
      "<0.001"
     ],
     [
-     "2000 evaluations: 50 particles × 40 iterations",
+     "2000: 50 × 40",
      "49",
-     "98.90 ± 0.52",
-     "98.01 ± 0.76",
+     "98.90 (0.52)",
+     "98.01 (0.76)",
      "160",
      "<0.001"
     ],
     [
-     "2000 evaluations: 100 particles × 20 iterations",
+     "2000: 100 × 20",
      "49",
-     "98.51 ± 0.76",
-     "97.78 ± 0.85",
+     "98.51 (0.76)",
+     "97.78 (0.85)",
      "43",
      "<0.001"
     ],
     [
-     "2000 evaluations: 250 particles × 8 iterations",
+     "2000: 250 × 8",
      "49",
-     "97.76 ± 0.57",
-     "96.84 ± 0.85",
+     "97.76 (0.57)",
+     "96.84 (0.85)",
      "11",
      "<0.001"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
@@ -992,7 +954,7 @@
    "caption": "**Table B4.** Allocation of evaluations, tuned coefficients (p within each budget).",
    "columns": [
     {
-     "header": "Budget and allocation",
+     "header": "Evaluations: particles × iterations",
      "width_in": 3.05,
      "align": "left"
     },
@@ -1024,151 +986,150 @@
    ],
    "rows": [
     [
-     "500 evaluations: 5 particles × 100 iterations",
+     "500: 5 × 100",
      "49",
-     "92.23 ± 7.11",
-     "91.20 ± 6.86",
-     "0.021",
+     "92.23 (7.11)",
+     "91.20 (6.86)",
+     "0.022",
      "<0.001"
     ],
     [
-     "500 evaluations: 10 particles × 50 iterations",
+     "500: 10 × 50",
      "49",
-     "98.87 ± 1.24",
-     "98.18 ± 1.45",
+     "98.87 (1.24)",
+     "98.18 (1.45)",
      "0.14",
      "0.923"
     ],
     [
-     "500 evaluations: 25 particles × 20 iterations",
+     "500: 25 × 20",
      "49",
-     "99.09 ± 0.66",
-     "98.33 ± 1.02",
+     "99.09 (0.66)",
+     "98.33 (1.02)",
      "1.1",
      "best"
     ],
     [
-     "500 evaluations: 50 particles × 10 iterations",
+     "500: 50 × 10",
      "49",
-     "97.66 ± 1.03",
-     "96.75 ± 1.32",
+     "97.66 (1.03)",
+     "96.75 (1.32)",
      "2.5",
      "<0.001"
     ],
     [
-     "500 evaluations: 100 particles × 5 iterations",
+     "500: 100 × 5",
      "49",
-     "95.89 ± 1.42",
-     "94.80 ± 1.90",
+     "95.89 (1.42)",
+     "94.80 (1.90)",
      "3",
      "<0.001"
     ],
     [
-     "500 evaluations: 250 particles × 2 iterations",
+     "500: 250 × 2",
      "49",
-     "94.22 ± 2.34",
-     "93.37 ± 2.59",
+     "94.22 (2.34)",
+     "93.37 (2.59)",
      "3.1",
      "<0.001"
     ],
     [
-     "1000 evaluations: 5 particles × 200 iterations",
+     "1000: 5 × 200",
      "49",
-     "92.23 ± 7.11",
-     "91.20 ± 6.86",
-     "0.021",
+     "92.23 (7.11)",
+     "91.20 (6.86)",
+     "0.022",
      "<0.001"
     ],
     [
-     "1000 evaluations: 10 particles × 100 iterations",
+     "1000: 10 × 100",
      "49",
-     "98.92 ± 1.24",
-     "98.24 ± 1.46",
+     "98.92 (1.24)",
+     "98.24 (1.46)",
      "0.13",
      "<0.001"
     ],
     [
-     "1000 evaluations: 25 particles × 40 iterations",
+     "1000: 25 × 40",
      "49",
-     "99.82 ± 0.30",
-     "99.51 ± 0.63",
+     "99.82 (0.30)",
+     "99.51 (0.63)",
      "0.65",
      "best"
     ],
     [
-     "1000 evaluations: 50 particles × 20 iterations",
+     "1000: 50 × 20",
      "49",
-     "99.10 ± 0.49",
-     "98.53 ± 0.78",
+     "99.10 (0.49)",
+     "98.53 (0.78)",
      "1.9",
      "<0.001"
     ],
     [
-     "1000 evaluations: 100 particles × 10 iterations",
+     "1000: 100 × 10",
      "49",
-     "98.09 ± 0.68",
-     "97.13 ± 0.97",
+     "98.09 (0.68)",
+     "97.13 (0.97)",
      "2.8",
      "<0.001"
     ],
     [
-     "1000 evaluations: 250 particles × 4 iterations",
+     "1000: 250 × 4",
      "49",
-     "96.67 ± 1.29",
-     "95.82 ± 1.66",
+     "96.67 (1.29)",
+     "95.82 (1.66)",
      "3.1",
      "<0.001"
     ],
     [
-     "2000 evaluations: 5 particles × 400 iterations",
+     "2000: 5 × 400",
      "49",
-     "92.23 ± 7.11",
-     "91.20 ± 6.86",
-     "0.021",
+     "92.23 (7.11)",
+     "91.20 (6.86)",
+     "0.022",
      "<0.001"
     ],
     [
-     "2000 evaluations: 10 particles × 200 iterations",
+     "2000: 10 × 200",
      "49",
-     "98.95 ± 1.24",
-     "98.29 ± 1.46",
+     "98.95 (1.24)",
+     "98.29 (1.46)",
      "0.11",
      "<0.001"
     ],
     [
-     "2000 evaluations: 25 particles × 80 iterations",
+     "2000: 25 × 80",
      "49",
-     "99.88 ± 0.28",
-     "99.64 ± 0.54",
+     "99.88 (0.28)",
+     "99.64 (0.54)",
      "0.44",
      "best"
     ],
     [
-     "2000 evaluations: 50 particles × 40 iterations",
+     "2000: 50 × 40",
      "49",
-     "99.86 ± 0.21",
-     "99.48 ± 0.53",
+     "99.86 (0.21)",
+     "99.48 (0.53)",
      "1.3",
      "0.148"
     ],
     [
-     "2000 evaluations: 100 particles × 20 iterations",
+     "2000: 100 × 20",
      "49",
-     "99.39 ± 0.44",
-     "98.71 ± 0.65",
+     "99.39 (0.44)",
+     "98.71 (0.65)",
      "2.5",
      "<0.001"
     ],
     [
-     "2000 evaluations: 250 particles × 8 iterations",
+     "2000: 250 × 8",
      "49",
-     "98.15 ± 0.65",
-     "97.14 ± 0.98",
+     "98.15 (0.65)",
+     "97.14 (0.98)",
      "3",
      "<0.001"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
@@ -1210,101 +1171,100 @@
     [
      "random, k = 1",
      "49",
-     "98.31 ± 0.70",
-     "97.33 ± 0.93",
+     "98.31 (0.70)",
+     "97.33 (0.93)",
      "83",
      "<0.001"
     ],
     [
      "random, k = 3",
      "49",
-     "98.62 ± 0.59",
-     "97.79 ± 0.68",
+     "98.63 (0.59)",
+     "97.79 (0.68)",
      "82",
      "<0.001"
     ],
     [
      "random, k = 8",
      "49",
-     "98.89 ± 0.62",
-     "98.07 ± 0.86",
+     "98.89 (0.62)",
+     "98.07 (0.86)",
      "37",
      "<0.001"
     ],
     [
      "random, k = 24",
      "49",
-     "99.77 ± 0.34",
-     "99.34 ± 0.82",
+     "99.77 (0.34)",
+     "99.34 (0.82)",
      "7.3",
      "best"
     ],
     [
      "nearest neighbours, k = 1",
      "49",
-     "98.81 ± 0.60",
-     "97.85 ± 1.04",
+     "98.81 (0.60)",
+     "97.85 (1.04)",
      "6.6",
      "<0.001"
     ],
     [
      "nearest neighbours, k = 3",
      "49",
-     "99.45 ± 0.38",
-     "98.79 ± 0.65",
+     "99.45 (0.38)",
+     "98.79 (0.65)",
      "6.8",
      "0.002"
     ],
     [
      "nearest neighbours, k = 8",
      "49",
-     "99.48 ± 0.41",
-     "98.99 ± 0.80",
+     "99.48 (0.41)",
+     "98.99 (0.80)",
      "6.7",
      "0.240"
     ],
     [
      "nearest neighbours, k = 24",
      "49",
-     "99.69 ± 0.45",
-     "99.31 ± 0.80",
+     "99.69 (0.45)",
+     "99.31 (0.80)",
      "4.9",
      "0.910"
     ],
     [
      "ring, k = 1",
      "49",
-     "98.49 ± 0.65",
-     "97.70 ± 0.89",
+     "98.49 (0.65)",
+     "97.70 (0.89)",
      "16",
      "<0.001"
     ],
     [
      "ring, k = 3",
      "49",
-     "99.12 ± 0.61",
-     "98.45 ± 0.91",
+     "99.13 (0.61)",
+     "98.45 (0.91)",
      "17",
      "<0.001"
     ],
     [
      "ring, k = 8",
      "49",
-     "99.49 ± 0.38",
-     "98.96 ± 0.74",
+     "99.49 (0.38)",
+     "98.96 (0.74)",
      "15",
      "0.123"
     ],
     [
      "ring, k = 24",
      "49",
-     "99.66 ± 0.33",
-     "99.17 ± 0.68",
+     "99.66 (0.33)",
+     "99.17 (0.68)",
      "5.5",
      "0.505"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
@@ -1346,101 +1306,100 @@
     [
      "random, k = 1",
      "49",
-     "99.26 ± 0.60",
-     "98.62 ± 0.78",
+     "99.26 (0.60)",
+     "98.62 (0.78)",
      "2.3",
      "<0.001"
     ],
     [
      "random, k = 3",
      "49",
-     "99.82 ± 0.30",
-     "99.51 ± 0.63",
+     "99.82 (0.30)",
+     "99.51 (0.63)",
      "0.65",
      "best"
     ],
     [
      "random, k = 8",
      "49",
-     "99.77 ± 0.37",
-     "99.42 ± 0.58",
+     "99.77 (0.37)",
+     "99.42 (0.58)",
      "0.22",
      "0.428"
     ],
     [
      "random, k = 24",
      "49",
-     "99.28 ± 0.66",
-     "98.63 ± 0.94",
+     "99.28 (0.66)",
+     "98.63 (0.94)",
      "0.13",
-     "0.002"
+     "0.001"
     ],
     [
      "nearest neighbours, k = 1",
      "49",
-     "95.18 ± 2.74",
-     "93.96 ± 3.14",
+     "95.18 (2.74)",
+     "93.96 (3.14)",
      "3.4",
      "<0.001"
     ],
     [
      "nearest neighbours, k = 3",
      "49",
-     "97.57 ± 1.63",
-     "96.71 ± 1.93",
+     "97.57 (1.63)",
+     "96.71 (1.93)",
      "2.9",
      "<0.001"
     ],
     [
      "nearest neighbours, k = 8",
      "49",
-     "98.83 ± 0.97",
-     "97.97 ± 1.14",
+     "98.83 (0.97)",
+     "97.97 (1.14)",
      "2.3",
      "<0.001"
     ],
     [
      "nearest neighbours, k = 24",
      "49",
-     "99.23 ± 0.64",
-     "98.50 ± 0.90",
+     "99.23 (0.64)",
+     "98.50 (0.90)",
      "0.1",
      "<0.001"
     ],
     [
      "ring, k = 1",
      "49",
-     "98.33 ± 1.03",
-     "97.39 ± 1.44",
+     "98.33 (1.03)",
+     "97.39 (1.44)",
      "3",
      "<0.001"
     ],
     [
      "ring, k = 3",
      "49",
-     "99.31 ± 0.61",
-     "98.71 ± 1.06",
+     "99.31 (0.61)",
+     "98.71 (1.06)",
      "2.5",
      "0.016"
     ],
     [
      "ring, k = 8",
      "49",
-     "99.57 ± 0.47",
-     "99.00 ± 0.81",
+     "99.57 (0.47)",
+     "99.00 (0.81)",
      "0.74",
      "0.040"
     ],
     [
      "ring, k = 24",
      "49",
-     "99.42 ± 0.61",
-     "98.80 ± 0.93",
+     "99.42 (0.61)",
+     "98.80 (0.93)",
      "0.098",
      "0.007"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
@@ -1482,117 +1441,116 @@
     [
      "α = 0.72, β = 0, γ = 3",
      "49",
-     "98.04 ± 1.01",
-     "96.97 ± 1.27",
+     "98.04 (1.01)",
+     "96.97 (1.27)",
      "280,000",
      "<0.001"
     ],
     [
      "α = 0.72, β = 0.5, γ = 2.5",
      "49",
-     "98.72 ± 0.61",
-     "97.90 ± 0.81",
+     "98.72 (0.61)",
+     "97.90 (0.81)",
      "6,700",
      "0.441"
     ],
     [
      "α = 0.72, β = 1, γ = 2",
      "49",
-     "98.55 ± 0.47",
-     "97.58 ± 0.68",
+     "98.55 (0.47)",
+     "97.58 (0.68)",
      "800",
      "0.024"
     ],
     [
      "α = 0.72, β = 1.5, γ = 1.5",
      "49",
-     "98.62 ± 0.59",
-     "97.79 ± 0.68",
+     "98.63 (0.59)",
+     "97.79 (0.68)",
      "82",
      "0.168"
     ],
     [
      "α = 0.72, β = 2, γ = 1",
      "49",
-     "98.93 ± 0.69",
-     "98.17 ± 1.01",
+     "98.93 (0.69)",
+     "98.17 (1.01)",
      "22",
      "best"
     ],
     [
      "α = 0.72, β = 2.5, γ = 0.5",
      "49",
-     "98.88 ± 0.82",
-     "98.21 ± 1.16",
+     "98.88 (0.82)",
+     "98.21 (1.16)",
      "9.1",
      "0.784"
     ],
     [
      "α = 0.72, β = 3, γ = 0",
      "49",
-     "97.27 ± 1.43",
-     "96.04 ± 1.86",
+     "97.27 (1.43)",
+     "96.04 (1.86)",
      "6.6",
      "<0.001"
     ],
     [
      "α = 0.4, β = 0, γ = 2",
      "49",
-     "99.05 ± 0.80",
-     "98.12 ± 1.34",
+     "99.05 (0.80)",
+     "98.12 (1.34)",
      "100",
      "<0.001"
     ],
     [
      "α = 0.4, β = 0.33, γ = 1.67",
      "49",
-     "99.68 ± 0.39",
-     "99.21 ± 0.70",
+     "99.68 (0.39)",
+     "99.21 (0.70)",
      "9.3",
-     "0.096"
+     "0.095"
     ],
     [
      "α = 0.4, β = 0.67, γ = 1.33",
      "49",
-     "99.82 ± 0.31",
-     "99.51 ± 0.56",
+     "99.82 (0.31)",
+     "99.51 (0.56)",
      "1.5",
      "best"
     ],
     [
      "α = 0.4, β = 1, γ = 1",
      "49",
-     "99.82 ± 0.30",
-     "99.51 ± 0.63",
+     "99.82 (0.30)",
+     "99.51 (0.63)",
      "0.65",
      "0.798"
     ],
     [
      "α = 0.4, β = 1.33, γ = 0.67",
      "49",
-     "99.56 ± 0.44",
-     "98.92 ± 0.77",
+     "99.56 (0.44)",
+     "98.92 (0.77)",
      "0.59",
      "0.005"
     ],
     [
      "α = 0.4, β = 1.67, γ = 0.33",
      "49",
-     "98.95 ± 0.51",
-     "98.08 ± 0.75",
+     "98.95 (0.51)",
+     "98.08 (0.75)",
      "0.93",
      "<0.001"
     ],
     [
      "α = 0.4, β = 2, γ = 0",
      "49",
-     "86.72 ± 6.18",
-     "85.91 ± 5.90",
+     "86.72 (6.18)",
+     "85.91 (5.90)",
      "3.5",
      "<0.001"
     ]
    ],
-   "note": null,
    "font_size": 12
   },
   {
@@ -1601,7 +1559,7 @@
   },
   {
    "type": "p",
-   "text": "The code needs Python 3.9 or newer and the packages in `requirements.txt` (NumPy for the ANN and PSO; pandas, SciPy and matplotlib for the analysis only). From the top folder: `python main.py` trains and tests one network with the final configuration, and `python main.py --help` lists the options for every hyperparameter; `python run_experiments.py --experiment all` repeats the whole study (about six minutes on four cores) and `python analyse_results.py` rebuilds the tables and figures; `python -m pytest` runs the tests. `README.md` gives more detail."
+   "text": "The code needs Python 3.9 or newer and the packages in `requirements.txt` (NumPy for the ANN and PSO; pandas, SciPy and matplotlib for the analysis only). From the top folder: `python main.py` trains and tests one network with the final configuration, and `python main.py --help` lists the options for the network and the swarm; `python run_experiments.py --experiment all` repeats the whole study (about six minutes on four cores) and `python analyse_results.py` rebuilds the tables and figures; `python -m pytest` runs the tests. `README.md` gives more detail."
   },
   {
    "type": "h1",

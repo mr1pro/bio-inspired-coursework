@@ -1,5 +1,5 @@
 label,function,pso,runs,best_fitness_mean,best_fitness_std,final_diversity_median,weight_norm_median
-sphere | standard,sphere,standard,30,-3.9690,0.8522,6.4560,0.2889
-sphere | tuned,sphere,tuned,30,-0.5519,0.1747,0.0558,0.1025
-direction | standard,direction,standard,30,0.7683,0.0308,40.2161,3.7863
-direction | tuned,direction,tuned,30,0.8493,0.0374,0.1171,0.4594
+sphere | standard,sphere,standard,30,-3.96897,0.852231,6.45601,0.288883
+sphere | tuned,sphere,tuned,30,-0.551904,0.174679,0.0558412,0.102477
+direction | standard,direction,standard,30,0.768317,0.0307566,40.2161,3.78628
+direction | tuned,direction,tuned,30,0.849331,0.0374252,0.117086,0.459359

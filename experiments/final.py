@@ -41,7 +41,7 @@ def _run(args: Tuple[str, Dict, int, Dict]) -> Dict:
 
 
 def final(runs: int, jobs: int) -> List[Dict]:
-    """Baseline, tuned and final configurations on the fixed 70/30 split."""
+    """Baseline and final configurations on the fixed 70/30 split."""
     tasks = []
     for name, config in FINAL_CONFIGS.items():
         for multiplier in BUDGET_MULTIPLIERS:
@@ -65,7 +65,8 @@ def _cv_run(args: Tuple[str, Dict, int, int, int, Dict]) -> Dict:
 
 
 def final_cv(runs: int, jobs: int, k: int = 10, repeats: int = 3) -> List[Dict]:
-    """Repeated stratified 10-fold cross-validation of the same configurations."""
+    """Repeated stratified 10-fold cross-validation of the same configurations
+    (always 3 repeats of 10 folds; the `runs` argument is not used)."""
     tasks = []
     for name, config in FINAL_CONFIGS.items():
         for multiplier in BUDGET_MULTIPLIERS:

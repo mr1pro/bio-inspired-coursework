@@ -17,6 +17,7 @@ the probability that a run of the best setting beats a run of the other one.
 """
 
 import os
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Dict, List, Optional, Sequence
 
 import matplotlib
@@ -66,6 +67,11 @@ def load(name: str) -> Optional[pd.DataFrame]:
 def load_curves(name: str) -> Dict[str, np.ndarray]:
     path = os.path.join(RAW, f"{name}_curves.npz")
     return dict(np.load(path)) if os.path.exists(path) else {}
+
+
+def fmt2(value: float) -> str:
+    """Two decimals with halves rounded up, so that 98.625 prints as 98.63."""
+    return str(Decimal(repr(round(float(value), 9))).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 
 def a12(better: Sequence[float], other: Sequence[float]) -> float:
@@ -169,7 +175,7 @@ def to_markdown(table: pd.DataFrame) -> str:
         def pm(metric):
             if f"{metric}_mean" not in r or pd.isna(r[f"{metric}_mean"]):
                 return ""
-            return f"{r[f'{metric}_mean']:.2f} ± {r[f'{metric}_std']:.2f}"
+            return f"{fmt2(r[f'{metric}_mean'])} ± {fmt2(r[f'{metric}_std'])}"
         if r.get("best_in_block", False):
             p_text = "best"
         elif pd.isna(r.get("p_holm", np.nan)):
@@ -209,14 +215,19 @@ KEY_COMPARISONS = [
     ("architecture", "tuned | 4-8-1", "tuned | 4-1"),
     ("architecture", "tuned | 4-8-1", "tuned | 4-8-8-1"),
     ("architecture", "tuned | 4-16-1", "tuned | 4-8-1"),
+    ("architecture", "tuned | 4-8-1", "tuned | 4-4-1"),
+    ("architecture", "tuned | 4-32-1", "tuned | 4-8-8-8-1"),
+    ("architecture", "standard | 4-32-1", "standard | 4-8-8-8-1"),
     ("activation", "tuned | 4-8-1 | relu", "tuned | 4-8-1 | tanh"),
     ("activation", "tuned | 4-8-1 | tanh", "tuned | 4-8-1 | logistic"),
     ("activation", "tuned | 4-8-1 | tanh", "tuned | 4-8-1 | linear"),
     ("activation", "tuned | 4-8-8-1 | tanh", "tuned | 4-8-8-1 | logistic"),
     ("activation", "standard | 4-8-1 | linear", "standard | 4-8-1 | tanh"),
+    ("activation", "standard | 4-8-8-1 | linear", "standard | 4-8-8-1 | tanh"),
     ("budget", "standard | budget 500 | 5x100", "standard | budget 500 | 25x20"),
     ("budget", "standard | budget 500 | 5x100", "standard | budget 500 | 250x2"),
     ("budget", "tuned | budget 500 | 25x20", "tuned | budget 500 | 5x100"),
+    ("budget", "standard | budget 500 | 5x100", "tuned | budget 500 | 25x20"),
     ("budget", "tuned | budget 500 | 25x20", "tuned | budget 500 | 10x50"),
     ("budget", "tuned | budget 1000 | 25x40", "tuned | budget 1000 | 50x20"),
     ("budget", "tuned | budget 2000 | 25x80", "tuned | budget 2000 | 50x40"),
@@ -367,7 +378,7 @@ def figure_coefficients(df: pd.DataFrame, balance: pd.DataFrame) -> None:
     ax1.set_xticks([0, 0.25, 0.5, 0.75, 1], ["0", "", "0.5", "", "1"])
     ax1.set_xlabel("Cognitive share  β / (β + γ)")
     ax1.set_ylabel("Test accuracy (%)")
-    ax1.set_ylim(84, 100.4)
+    ax1.set_ylim(82, 100.5)
     ax1.set_yticks([85, 90, 95, 100])
     ax1.set_title("(b) Cognitive vs. social", loc="left", pad=12)
     ax1.legend(loc="lower left", handlelength=1.4, borderaxespad=0.3)
@@ -493,7 +504,7 @@ def main() -> None:
             continue
         data[name] = df
         table = summarise(name, df)
-        table.to_csv(os.path.join(TABLES, f"{name}.csv"), index=False, float_format="%.4f")
+        table.to_csv(os.path.join(TABLES, f"{name}.csv"), index=False, float_format="%.6g")
         sections.append(f"## {name}\n")
         if "test_accuracy_mean" in table:
             if "kruskal_p" in table and table["kruskal_p"].notna().any():

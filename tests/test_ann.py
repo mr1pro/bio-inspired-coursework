@@ -124,3 +124,17 @@ def test_losses_on_known_values():
     assert np.isclose(make_loss("mse").compute(y, p), (0.04 + 0.16) / 2)
     assert np.isclose(make_loss("bce").compute(y, p), -(np.log(0.8) + np.log(0.6)) / 2)
     assert np.isfinite(make_loss("bce").compute(y, np.array([[0.0], [1.0]])))  # no log(0)
+
+
+def test_output_activation_can_be_changed():
+    X, y = np.zeros((4, 4)), np.zeros((4, 1))
+    network, _ = MLPBuilder().set_dataset(X, y).set_configuration({
+        "hidden_layers": [3], "activations": ["relu"], "output_activation": "tanh",
+        "task": "binary_classification",
+    }).build()
+    assert network.layers[-1].activation.name == "tanh"
+    with pytest.raises(ValueError):
+        MLPBuilder().set_dataset(X, y).set_configuration({
+            "hidden_layers": [3], "activations": ["relu"], "output_activation": "nope",
+            "task": "binary_classification",
+        })

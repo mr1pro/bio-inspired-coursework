@@ -383,7 +383,7 @@ Kruskal-Wallis p per block: 0.743, 0.046, 0.549, 0.065, 0.047, 0.794, 0.910, 0.5
 | setting | runs | D | train acc. % | test acc. % | test F1 % | diversity | weight RMS | p (Holm) | A12 |
 |---|---|---|---|---|---|---|---|---|---|
 | standard | 1000 evals | 4-8-1 | fixed tanh | 30 | 49 | 98.63 ± 0.59 | 97.79 ± 0.68 | 97.54 ± 0.74 | 82.2 | 4.35 | best |  |
-| standard | 1000 evals | 4-8-1 | PSO-chosen | 30 | 50 | 98.62 ± 0.64 | 97.81 ± 0.87 | 97.57 ± 0.94 | 87.4 | 2.51 | 0.749 | 0.48 |
+| standard | 1000 evals | 4-8-1 | PSO-chosen | 30 | 50 | 98.63 ± 0.64 | 97.81 ± 0.87 | 97.57 ± 0.94 | 87.4 | 2.51 | 0.749 | 0.48 |
 | standard | 1000 evals | 4-8-8-1 | fixed tanh | 30 | 121 | 97.84 ± 1.21 | 96.59 ± 1.52 | 96.27 ± 1.58 | 110 | 3.2 | best |  |
 | standard | 1000 evals | 4-8-8-1 | PSO-chosen | 30 | 123 | 97.02 ± 1.53 | 95.80 ± 1.88 | 95.41 ± 2.00 | 105 | 3.59 | 0.046 | 0.65 |
 | standard | 3000 evals | 4-8-1 | fixed tanh | 30 | 49 | 99.41 ± 0.27 | 98.73 ± 0.50 | 98.57 ± 0.56 | 1.85e+03 | 33.4 | best |  |
@@ -531,14 +531,19 @@ Two-sided Mann-Whitney U on test accuracy (uncorrected); A12 = probability that 
 | architecture | tuned | 4-8-1 | tuned | 4-1 | 99.51 | 98.43 | 4.502e-07 | 0.875 |
 | architecture | tuned | 4-8-1 | tuned | 4-8-8-1 | 99.51 | 98.97 | 0.01501 | 0.679 |
 | architecture | tuned | 4-16-1 | tuned | 4-8-1 | 99.6 | 99.51 | 0.9568 | 0.504 |
+| architecture | tuned | 4-8-1 | tuned | 4-4-1 | 99.51 | 99.38 | 0.3497 | 0.568 |
+| architecture | tuned | 4-32-1 | tuned | 4-8-8-8-1 | 99.55 | 99.01 | 0.0008813 | 0.747 |
+| architecture | standard | 4-32-1 | standard | 4-8-8-8-1 | 97.14 | 95.57 | 0.0005709 | 0.759 |
 | activation | tuned | 4-8-1 | relu | tuned | 4-8-1 | tanh | 99.6 | 99.51 | 0.8538 | 0.486 |
 | activation | tuned | 4-8-1 | tanh | tuned | 4-8-1 | logistic | 99.51 | 98.64 | 9.529e-06 | 0.829 |
 | activation | tuned | 4-8-1 | tanh | tuned | 4-8-1 | linear | 99.51 | 98.79 | 2.697e-05 | 0.811 |
 | activation | tuned | 4-8-8-1 | tanh | tuned | 4-8-8-1 | logistic | 98.97 | 94.62 | 7.991e-10 | 0.962 |
 | activation | standard | 4-8-1 | linear | standard | 4-8-1 | tanh | 98.05 | 97.79 | 0.1552 | 0.607 |
+| activation | standard | 4-8-8-1 | linear | standard | 4-8-8-1 | tanh | 97.9 | 96.59 | 4.117e-05 | 0.808 |
 | budget | standard | budget 500 | 5x100 | standard | budget 500 | 25x20 | 98.68 | 96.38 | 5.658e-08 | 0.908 |
 | budget | standard | budget 500 | 5x100 | standard | budget 500 | 250x2 | 98.68 | 93.54 | 1.46e-10 | 0.982 |
 | budget | tuned | budget 500 | 25x20 | tuned | budget 500 | 5x100 | 98.33 | 91.2 | 3.002e-09 | 0.946 |
+| budget | standard | budget 500 | 5x100 | tuned | budget 500 | 25x20 | 98.68 | 98.33 | 0.09988 | 0.623 |
 | budget | tuned | budget 500 | 25x20 | tuned | budget 500 | 10x50 | 98.33 | 98.18 | 0.9231 | 0.508 |
 | budget | tuned | budget 1000 | 25x40 | tuned | budget 1000 | 50x20 | 99.51 | 98.53 | 6.633e-06 | 0.836 |
 | budget | tuned | budget 2000 | 25x80 | tuned | budget 2000 | 50x40 | 99.64 | 99.48 | 0.148 | 0.604 |

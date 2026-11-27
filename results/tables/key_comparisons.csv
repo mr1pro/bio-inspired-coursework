@@ -17,14 +17,19 @@ architecture,standard | 4-1,standard | 4-8-8-8-1,98.52,95.57,1.3171745251980264e
 architecture,tuned | 4-8-1,tuned | 4-1,99.51,98.43,4.501731900252319e-07,0.875
 architecture,tuned | 4-8-1,tuned | 4-8-8-1,99.51,98.97,0.015011496513768076,0.679
 architecture,tuned | 4-16-1,tuned | 4-8-1,99.6,99.51,0.9567632372002933,0.504
+architecture,tuned | 4-8-1,tuned | 4-4-1,99.51,99.38,0.3497147608467702,0.568
+architecture,tuned | 4-32-1,tuned | 4-8-8-8-1,99.55,99.01,0.0008813028336540737,0.747
+architecture,standard | 4-32-1,standard | 4-8-8-8-1,97.14,95.57,0.0005708623135470595,0.759
 activation,tuned | 4-8-1 | relu,tuned | 4-8-1 | tanh,99.6,99.51,0.8537986640402505,0.486
 activation,tuned | 4-8-1 | tanh,tuned | 4-8-1 | logistic,99.51,98.64,9.528537647736876e-06,0.829
 activation,tuned | 4-8-1 | tanh,tuned | 4-8-1 | linear,99.51,98.79,2.697312067315026e-05,0.811
 activation,tuned | 4-8-8-1 | tanh,tuned | 4-8-8-1 | logistic,98.97,94.62,7.991027847588919e-10,0.962
 activation,standard | 4-8-1 | linear,standard | 4-8-1 | tanh,98.05,97.79,0.15518212621075625,0.607
+activation,standard | 4-8-8-1 | linear,standard | 4-8-8-1 | tanh,97.9,96.59,4.1174314650398546e-05,0.808
 budget,standard | budget 500 | 5x100,standard | budget 500 | 25x20,98.68,96.38,5.657905816553535e-08,0.908
 budget,standard | budget 500 | 5x100,standard | budget 500 | 250x2,98.68,93.54,1.460005126626236e-10,0.982
 budget,tuned | budget 500 | 25x20,tuned | budget 500 | 5x100,98.33,91.2,3.0023095936584087e-09,0.946
+budget,standard | budget 500 | 5x100,tuned | budget 500 | 25x20,98.68,98.33,0.09988220070747977,0.623
 budget,tuned | budget 500 | 25x20,tuned | budget 500 | 10x50,98.33,98.18,0.9230865807640147,0.508
 budget,tuned | budget 1000 | 25x40,tuned | budget 1000 | 50x20,99.51,98.53,6.6330535739377935e-06,0.836
 budget,tuned | budget 2000 | 25x80,tuned | budget 2000 | 50x40,99.64,99.48,0.14795504753453398,0.604

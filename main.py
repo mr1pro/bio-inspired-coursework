@@ -43,6 +43,9 @@ def parse_arguments() -> argparse.Namespace:
     ann.add_argument("--activations", nargs="*", default=None,
                      choices=[a for a in ACTIVATIONS if a != "softmax"],
                      help="activation of each hidden layer; one name is reused for all layers")
+    ann.add_argument("--output-activation", default="logistic",
+                     choices=[a for a in ACTIVATIONS if a != "softmax"],
+                     help="activation of the output unit (its value is thresholded at 0.5)")
 
     pso = parser.add_argument_group("PSO (symbols as in Algorithm 39)")
     pso.add_argument("--swarm-size", type=int, default=25, help="number of particles")
@@ -57,6 +60,8 @@ def parse_arguments() -> argparse.Namespace:
     pso.add_argument("--final-alpha", type=float, default=None,
                      help="if set, alpha decreases linearly to this value")
     pso.add_argument("--max-velocity", type=float, default=None, help="limit on each velocity component")
+    pso.add_argument("--velocity-init", choices=["half_diff", "zero"], default="half_diff",
+                     help="initial velocity: half the vector between two random points, or zero")
     pso.add_argument("--init-range", type=float, default=1.0,
                      help="particles start uniformly in [-r, r] in every dimension")
     pso.add_argument("--boundary", choices=list(BOUNDARY_HANDLERS), default="none",
@@ -65,7 +70,9 @@ def parse_arguments() -> argparse.Namespace:
 
     run = parser.add_argument_group("run")
     run.add_argument("--fitness", choices=["accuracy", "loss"], default="accuracy",
-                     help="what PSO maximises: training accuracy, or minus the cross-entropy loss")
+                     help="what PSO maximises: training accuracy, or minus a loss")
+    run.add_argument("--loss", choices=["bce", "mse"], default="bce",
+                     help="the loss used with --fitness loss: cross-entropy or mean squared error")
     run.add_argument("--search-activations", action="store_true",
                      help="let PSO choose the hidden activations (extra genes in the particle)")
     run.add_argument("--test-fraction", type=float, default=0.3, help="share of the data held out for testing")
@@ -111,7 +118,9 @@ def main() -> None:
     builder.set_configuration({
         "hidden_layers": args.hidden,
         "activations": activations,
+        "output_activation": args.output_activation,
         "task": "binary_classification",
+        "loss": args.loss,
     })
     network, loss = builder.build()
 
@@ -147,6 +156,7 @@ def main() -> None:
         informant_strategy=make_informant_strategy(args.informant_strategy),
         init_bounds=(-args.init_range, args.init_range),
         boundary_handler=make_boundary_handler(args.boundary, -args.bound, args.bound),
+        velocity_init=args.velocity_init,
         max_velocity=args.max_velocity,
         final_inertia_weight=args.final_alpha,
         track_diversity=True,

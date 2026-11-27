@@ -33,17 +33,19 @@ Test set    : accuracy 1.0000  precision 1.0000  recall 1.0000  F1 1.0000   (TP 
 
 ## Changing the network and the swarm
 
-Every hyperparameter is a command-line option (`python main.py --help` lists them all):
+The hyperparameters are command-line options (`python main.py --help` lists them all):
 
 ```bash
 python main.py --hidden 16 --activations relu                  # one hidden layer of 16 ReLU units
 python main.py --hidden 8 8 --activations tanh logistic        # two hidden layers, one activation each
 python main.py --hidden                                        # no hidden layer
+python main.py --output-activation tanh                        # the output unit is configurable too
 python main.py --swarm-size 50 --iterations 20                 # same 1000 evaluations, spent differently
 python main.py --alpha 0.72 --beta 1.5 --gamma 1.5 --delta 0   # coefficients of Algorithm 39
 python main.py --informants 5 --informant-strategy nearest     # random | nearest | ring
 python main.py --boundary clamp --bound 2                      # none | clamp | reflect | wrap | random
 python main.py --search-activations                            # PSO also chooses the hidden activations
+python main.py --fitness loss --loss mse                       # a loss as the fitness instead of accuracy
 python main.py --random-network                                # evaluate an untrained network
 python main.py --seed 7 --plot                                 # another run; saves results/convergence.png
 ```
@@ -96,8 +98,10 @@ src/data/dataset.py     loading, stratified split, stratified k-fold, standardis
 src/evaluation/metrics.py   accuracy, precision, recall, F1, confusion counts
 
 experiments/            baseline configuration and the definition of every experiment
-tests/                  70 unit tests (pytest)
+tests/                  71 unit tests (pytest)
 data/                   the UCI data file
+report/                 the report (Word and PDF) and the scripts that build it from results/
+make_submission.sh      collects the report and a zip of the code into submission/
 ```
 
 ### Where Algorithm 39 is in the code
