@@ -1,0 +1,534 @@
+{
+ "standard | 4-1": {
+  "hidden_layers": [],
+  "activations": [],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-2-1": {
+  "hidden_layers": [
+   2
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-4-1": {
+  "hidden_layers": [
+   4
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-8-1": {
+  "hidden_layers": [
+   8
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-16-1": {
+  "hidden_layers": [
+   16
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-32-1": {
+  "hidden_layers": [
+   32
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-4-4-1": {
+  "hidden_layers": [
+   4,
+   4
+  ],
+  "activations": [
+   "tanh",
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-8-8-1": {
+  "hidden_layers": [
+   8,
+   8
+  ],
+  "activations": [
+   "tanh",
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-16-16-1": {
+  "hidden_layers": [
+   16,
+   16
+  ],
+  "activations": [
+   "tanh",
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "standard | 4-8-8-8-1": {
+  "hidden_layers": [
+   8,
+   8,
+   8
+  ],
+  "activations": [
+   "tanh",
+   "tanh",
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.72,
+  "beta": 1.5,
+  "gamma": 1.5,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-1": {
+  "hidden_layers": [],
+  "activations": [],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-2-1": {
+  "hidden_layers": [
+   2
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-4-1": {
+  "hidden_layers": [
+   4
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-8-1": {
+  "hidden_layers": [
+   8
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-16-1": {
+  "hidden_layers": [
+   16
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-32-1": {
+  "hidden_layers": [
+   32
+  ],
+  "activations": [
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-4-4-1": {
+  "hidden_layers": [
+   4,
+   4
+  ],
+  "activations": [
+   "tanh",
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-8-8-1": {
+  "hidden_layers": [
+   8,
+   8
+  ],
+  "activations": [
+   "tanh",
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-16-16-1": {
+  "hidden_layers": [
+   16,
+   16
+  ],
+  "activations": [
+   "tanh",
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ },
+ "tuned | 4-8-8-8-1": {
+  "hidden_layers": [
+   8,
+   8,
+   8
+  ],
+  "activations": [
+   "tanh",
+   "tanh",
+   "tanh"
+  ],
+  "swarm_size": 25,
+  "iterations": 40,
+  "alpha": 0.4,
+  "beta": 1.0,
+  "gamma": 1.0,
+  "delta": 0.0,
+  "epsilon": 1.0,
+  "informants": 3,
+  "informant_strategy": "random",
+  "init_range": 1.0,
+  "boundary": "none",
+  "bound": 5.0,
+  "velocity_init": "half_diff",
+  "max_velocity": null,
+  "final_alpha": null,
+  "fitness": "accuracy",
+  "loss": "bce",
+  "search_activations": false
+ }
+}

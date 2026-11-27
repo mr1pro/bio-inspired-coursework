@@ -1,5 +1,9 @@
+# The ANN and PSO themselves need only NumPy.
 numpy
+# Used only by analyse_results.py (tables, significance tests, figures)
+# and by the --plot option of main.py.
 pandas
-scikit-learn
+scipy
 matplotlib
+# Used only to run the tests.
 pytest

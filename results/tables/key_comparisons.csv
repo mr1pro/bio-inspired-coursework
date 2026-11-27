@@ -1,0 +1,48 @@
+experiment,A,B,test_acc_A,test_acc_B,p_value,A12
+final,final | 1000 evals,baseline | 1000 evals,99.51,97.79,1.0400761673045717e-09,0.955
+final,final | 5000 evals,baseline | 5000 evals,99.64,98.77,3.8467364943140523e-07,0.876
+final,final | 5000 evals,final | 1000 evals,99.64,99.51,0.47101747700457564,0.551
+final_cv,final | 1000 evals,baseline | 1000 evals,99.66,98.08,2.3131760312919796e-07,0.877
+coefficients,alpha 0.4 | phi 2.0,alpha 0.72 | phi 3.0,99.51,97.79,1.0400761673045717e-09,0.955
+balance,tuned | beta 1 gamma 1,tuned | beta 0 gamma 2,99.51,98.12,8.198813697768356e-07,0.867
+balance,tuned | beta 1 gamma 1,tuned | beta 2 gamma 0,99.51,85.91,2.2147264650551318e-11,1.0
+balance,standard | beta 1.5 gamma 1.5,standard | beta 0 gamma 3,97.79,96.97,0.005210660378207045,0.709
+balance,standard | beta 1.5 gamma 1.5,standard | beta 3 gamma 0,97.79,96.04,0.00013301097698586968,0.787
+global_best,standard | gamma 0.75 delta 0.75,standard | gamma 1.5 delta 0,99.56,97.79,1.923721497036481e-10,0.976
+global_best,tuned | gamma 1 delta 0,tuned | gamma 0.5 delta 0.5,99.51,98.41,3.473091413582101e-05,0.807
+jump_size,standard | epsilon 0.5,standard | epsilon 1.0,99.21,97.79,4.275580165207154e-09,0.94
+jump_size,tuned | epsilon 1.0,tuned | epsilon 0.5,99.51,97.6,1.331124602283051e-08,0.924
+architecture,standard | 4-1,standard | 4-8-1,98.52,97.79,4.4239009147621314e-05,0.805
+architecture,standard | 4-1,standard | 4-8-8-8-1,98.52,95.57,1.3171745251980264e-10,0.982
+architecture,tuned | 4-8-1,tuned | 4-1,99.51,98.43,4.501731900252319e-07,0.875
+architecture,tuned | 4-8-1,tuned | 4-8-8-1,99.51,98.97,0.015011496513768076,0.679
+architecture,tuned | 4-16-1,tuned | 4-8-1,99.6,99.51,0.9567632372002933,0.504
+activation,tuned | 4-8-1 | relu,tuned | 4-8-1 | tanh,99.6,99.51,0.8537986640402505,0.486
+activation,tuned | 4-8-1 | tanh,tuned | 4-8-1 | logistic,99.51,98.64,9.528537647736876e-06,0.829
+activation,tuned | 4-8-1 | tanh,tuned | 4-8-1 | linear,99.51,98.79,2.697312067315026e-05,0.811
+activation,tuned | 4-8-8-1 | tanh,tuned | 4-8-8-1 | logistic,98.97,94.62,7.991027847588919e-10,0.962
+activation,standard | 4-8-1 | linear,standard | 4-8-1 | tanh,98.05,97.79,0.15518212621075625,0.607
+budget,standard | budget 500 | 5x100,standard | budget 500 | 25x20,98.68,96.38,5.657905816553535e-08,0.908
+budget,standard | budget 500 | 5x100,standard | budget 500 | 250x2,98.68,93.54,1.460005126626236e-10,0.982
+budget,tuned | budget 500 | 25x20,tuned | budget 500 | 5x100,98.33,91.2,3.0023095936584087e-09,0.946
+budget,tuned | budget 500 | 25x20,tuned | budget 500 | 10x50,98.33,98.18,0.9230865807640147,0.508
+budget,tuned | budget 1000 | 25x40,tuned | budget 1000 | 50x20,99.51,98.53,6.6330535739377935e-06,0.836
+budget,tuned | budget 2000 | 25x80,tuned | budget 2000 | 50x40,99.64,99.48,0.14795504753453398,0.604
+informants,standard | nearest k=3,standard | random k=3,98.79,97.79,1.4465118971534636e-06,0.861
+informants,standard | random k=24,standard | random k=3,99.34,97.79,5.540221419007334e-09,0.937
+informants,tuned | random k=3,tuned | nearest k=3,99.51,96.71,5.787453325324214e-10,0.963
+informants,tuned | random k=3,tuned | ring k=3,99.51,98.71,0.002292478525132344,0.725
+informants,tuned | random k=3,tuned | random k=24,99.51,98.63,0.00014819445527074096,0.782
+boundary,standard | clamp +/-1,standard | none,98.23,97.79,0.024839673496479527,0.668
+boundary,standard | clamp +/-1,standard | reflect +/-1,98.23,96.63,1.970696613936263e-05,0.821
+boundary,standard | clamp +/-1,standard | wrap +/-1,98.23,94.61,6.411310457875429e-10,0.964
+boundary,standard | none,standard | wrap +/-1,97.79,94.61,6.609048974654281e-09,0.935
+velocity,standard | vmax 0.5,standard | vmax None,99.13,97.79,1.4816416754745884e-08,0.924
+velocity,tuned | vmax None,tuned | vmax 0.1,99.51,98.45,2.3664566208281604e-05,0.814
+velocity,standard | zero initial velocity,standard | vmax None,97.92,97.79,0.42243612803468233,0.561
+inertia_schedule,phi 2 | alpha constant 0.4,phi 2 | alpha 0.9 -> 0.4,99.51,99.25,0.0972108189549472,0.622
+fitness_function,tuned | 1000 evals | accuracy,tuned | 1000 evals | cross-entropy,99.51,97.13,1.6210007808673934e-10,0.977
+fitness_function,tuned | 1000 evals | accuracy,tuned | 1000 evals | MSE,99.51,97.76,3.2332028663541933e-09,0.942
+fitness_function,standard | 1000 evals | accuracy,standard | 1000 evals | cross-entropy,97.79,97.2,0.02466557724602355,0.668
+activation_search,tuned | 1000 evals | 4-8-1 | fixed tanh,tuned | 1000 evals | 4-8-1 | PSO-chosen,99.51,99.22,0.0474703108981764,0.646
+activation_search,tuned | 3000 evals | 4-8-1 | fixed tanh,tuned | 3000 evals | 4-8-1 | PSO-chosen,99.64,99.66,0.9160202987372378,0.492

@@ -1,0 +1,5 @@
+label,configuration,budget,repeat,fold,runs,D,train_accuracy_mean,train_accuracy_std,test_accuracy_mean,test_accuracy_std,test_f1_mean,test_f1_std,test_accuracy_min,test_accuracy_max,final_diversity_median,weight_norm_median,best_in_block,p_holm,A12,kruskal_p
+baseline | 1000 evals,baseline,1000,0,0,30,49,98.2967,0.5149,98.0805,1.1574,97.8730,1.2756,95.6204,100.0000,89.4207,4.9302,False,0.0000,0.8767,0.0000
+baseline | 5000 evals,baseline,5000,0,0,30,49,99.3009,0.2493,99.1251,0.9062,99.0200,1.0083,96.3504,100.0000,4126.9861,56.3666,False,0.0011,0.7228,0.0011
+final | 1000 evals,final,1000,0,0,30,49,99.6869,0.4278,99.6597,0.5323,99.6206,0.5913,98.5401,100.0000,0.6656,0.4567,True,,,0.0000
+final | 5000 evals,final,5000,0,0,30,49,99.8192,0.3965,99.7567,0.4824,99.7267,0.5405,98.5401,100.0000,0.3730,0.4489,True,,,0.0011
